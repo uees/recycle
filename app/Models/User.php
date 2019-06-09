@@ -16,6 +16,32 @@ class User extends Base implements AuthenticatableContract, JWTSubject
     // 查询用户的时候，不暴露密码
     protected $hidden = ['password', 'deleted_at'];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'phone', 'name', 'email', 'password', 'avatar',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * @param $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->roles()->where('slug', $role)->exists();
+    }
+
     // jwt 需要实现的方法
     public function getJWTIdentifier()
     {

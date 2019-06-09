@@ -15,6 +15,7 @@ class CreateQcRecordsTable extends Migration
     {
         Schema::create('qc_records', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('recycled_thing_id')->nullable();
             $table->decimal('bad_amount')->default(0);
             $table->enum('type', ['IQC', 'SC'])->default('IQC');
             $table->timestamps();

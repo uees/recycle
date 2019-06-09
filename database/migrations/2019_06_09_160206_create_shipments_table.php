@@ -18,6 +18,7 @@ class CreateShipmentsTable extends Migration
             $table->unsignedInteger('customer_id')->index();
             $table->decimal('weight');
             $table->decimal('amount')->nullable();
+            $table->string('created_user')->nullable();
             $table->timestamps();
         });
     }
