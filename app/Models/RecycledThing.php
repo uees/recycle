@@ -8,7 +8,9 @@ class RecycledThing extends Base
 {
     protected $fillable = [
         'amount',
+        'confirmed_amount',
         'recycled_user',
+        'confirmed_user',
     ];
 
     /**

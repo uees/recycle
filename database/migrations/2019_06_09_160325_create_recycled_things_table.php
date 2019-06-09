@@ -17,7 +17,9 @@ class CreateRecycledThingsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('customer_id')->index();
             $table->decimal('amount')->nullable();
+            $table->decimal('confirmed_amount')->nullable();
             $table->string('recycled_user')->nullable();
+            $table->string('confirmed_user')->nullable();
             $table->timestamps();
         });
     }

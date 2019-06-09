@@ -39,7 +39,7 @@ class User extends Base implements AuthenticatableContract, JWTSubject
      */
     public function hasRole($role)
     {
-        return $this->roles()->where('slug', $role)->exists();
+        return $this->roles()->where('name', $role)->exists();
     }
 
     // jwt 需要实现的方法
