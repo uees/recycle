@@ -3,6 +3,7 @@
 namespace App\Api\V1;
 
 use App\Models\Shipment;
+use App\Models\Customer;
 use App\Transformers\ShipmentTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
@@ -56,6 +57,46 @@ class ShipmentController extends Controller
     // 发货
     public function store(Request $request)
     {
+        $validator = app('validator')->make($request->input(), [
+            'customer' => 'bail|required|string|max:256',
+            'product_name' => 'bail|required|string|max:128',
+            'product_batch' => 'nullable|string|max:64',
+            'weight' => 'bail|required|numeric',
+            'amount' => 'nullable|numeric',
+        ]);
 
+        if ($validator->fails()) {
+            return $this->errorBadRequest($validator);
+        }
+
+        $c = $request->get('customer');
+        $customer = Customer::whereName($c)->first();
+        if (is_null($customer)) {
+            $customer = Customer::create([
+                'name' => $c
+            ]);
+        }
+
+
+        $attributes = $request->only([
+            'product_name',
+            'product_batch',
+            'weight',
+            'amount'
+        ]);
+
+        $attributes['customer_id'] = $customer->id;
+
+        $attributes['created_user'] = vsprintf('uid%u:%s(%s)', [
+            $this->user()->id,
+            $this->user()->name,
+            $this->user()->email
+        ]);
+
+        $shipment = Shipment::create($attributes);
+
+        return $this->response
+            ->item($shipment, new ShipmentTransformer())
+            ->setStatusCode(201);
     }
 }

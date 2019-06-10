@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class Shipment extends Model
 {
     protected $fillable = [
+        'product_name',
+        'product_batch',
         'weight',
         'amount',
         'created_user',

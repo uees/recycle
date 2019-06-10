@@ -20,7 +20,7 @@ class CreateShipmentsTable extends Migration
             $table->string('product_batch', 64)->nullable();
             $table->decimal('weight');
             $table->decimal('amount')->nullable();
-            $table->string('created_user')->nullable();
+            $table->string('created_user', 64)->nullable();
             $table->timestamps();
         });
     }
