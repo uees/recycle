@@ -3,8 +3,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 
-class RecycledThing extends Base
+
+class RecycledThing extends Model
 {
     protected $fillable = [
         'amount',

@@ -3,8 +3,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 
-class QcRecord extends Base
+
+class QcRecord extends Model
 {
     protected $fillable = [
         'bad_amount',

@@ -3,8 +3,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 
-class Shipment extends Base
+
+class Shipment extends Model
 {
     protected $fillable = [
         'weight',

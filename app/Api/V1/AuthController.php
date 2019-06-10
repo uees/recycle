@@ -11,7 +11,7 @@ use App\Transformers\AuthorizationTransformer;
 
 class AuthController extends Controller
 {
-    public function store(Request $request)
+    public function login(Request $request)
     {
         $validator = app('validator')->make($request->all(), [
             'email' => 'required|email',
@@ -34,15 +34,17 @@ class AuthController extends Controller
             ->setStatusCode(201);
     }
 
-    public function update()
+    public function refresh()
     {
         $authorization = new Authorization(Auth::refresh());
+
         return $this->response->item($authorization, new AuthorizationTransformer());
     }
 
-    public function destroy()
+    public function logout()
     {
         Auth::logout();
+
         return $this->response->noContent();
     }
 }

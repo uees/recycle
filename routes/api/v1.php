@@ -16,9 +16,9 @@ $api->version('v1', [
 ], function (Dingo\Api\Routing\Router $api) {
     // Auth
     // login
-    $api->post('authorizations', [
-        'as' => 'authorizations.store',
-        'uses' => 'AuthController@store',
+    $api->post('auth/login', [
+        'as' => 'auth.login',
+        'uses' => 'AuthController@login',
     ]);
 
     // User
@@ -39,5 +39,34 @@ $api->version('v1', [
         'uses' => 'UserController@show',
     ]);
 
+    $api->group(['middleware' => 'api.auth'], function (Dingo\Api\Routing\Router $api) {
+        $api->put('auth/refresh', [
+            'as' => 'auth.refresh',
+            'uses' => 'AuthController@refresh',
+        ]);
 
+        $api->delete('auth/logout', [
+            'as' => 'auth.logout',
+            'uses' => 'AuthController@logout',
+        ]);
+
+        // USER
+        // my detail
+        $api->get('user', [
+            'as' => 'user.me',
+            'uses' => 'UserController@me',
+        ]);
+
+        // update part of me
+        $api->patch('user', [
+            'as' => 'user.update',
+            'uses' => 'UserController@updateMe',
+        ]);
+
+        // update my password
+        $api->put('user/password', [
+            'as' => 'user.password.update',
+            'uses' => 'UserController@password',
+        ]);
+    });
 });

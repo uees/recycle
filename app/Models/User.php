@@ -6,9 +6,10 @@ use Illuminate\Auth\Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Model;
 
 
-class User extends Base implements AuthenticatableContract, JWTSubject
+class User extends Model implements AuthenticatableContract, JWTSubject
 {
     // 软删除和用户验证
     use SoftDeletes, Authenticatable;

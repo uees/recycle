@@ -42,5 +42,10 @@ class AppServiceProvider extends ServiceProvider
                 app('log')->info(vsprintf($sqlWithPlaceholders, array_map([$pdo, 'quote'], $bindings)));
             });
         }
+
+        if (!app()->environment('production')) {
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+            $this->app->configure('ide-helper');
+        }
     }
 }
