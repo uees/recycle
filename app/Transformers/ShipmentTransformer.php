@@ -7,7 +7,14 @@ use League\Fractal\TransformerAbstract;
 
 class ShipmentTransformer extends TransformerAbstract
 {
-    protected $availableIncludes = ['customer', 'qc_record'];
+    protected $availableIncludes = [
+        'customer',
+        'created_user',
+    ];
+
+    protected $defaultIncludes = [
+        // 'created_user',
+    ];
 
     public function transform(Shipment $shipment)
     {
@@ -21,5 +28,14 @@ class ShipmentTransformer extends TransformerAbstract
         }
 
         return $this->item($shipment->customer, new CustomerTransformer());
+    }
+
+    public function includeCreatedUsers(Shipment $shipment)
+    {
+        if (!$shipment->created_user()->exists()) {
+            return $this->null();
+        }
+
+        return $this->item($shipment->created_user, new UserTransformer());
     }
 }

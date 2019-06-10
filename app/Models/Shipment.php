@@ -13,7 +13,6 @@ class Shipment extends Model
         'product_batch',
         'weight',
         'amount',
-        'created_user',
     ];
 
     /**
@@ -22,5 +21,13 @@ class Shipment extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function created_user()
+    {
+        return $this->belongsTo(User::class, 'created_user_id');
     }
 }

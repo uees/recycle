@@ -16,10 +16,10 @@ class CreateRecycledThingsTable extends Migration
         Schema::create('recycled_things', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('customer_id')->index();
+            $table->unsignedInteger('confirmed_user_id')->nullable();
             $table->decimal('amount')->nullable();
             $table->decimal('confirmed_amount')->nullable();
-            $table->string('recycled_user')->nullable();
-            $table->string('confirmed_user')->nullable();
+            $table->string('recycled_user', 64)->nullable();
             $table->timestamps();
         });
     }

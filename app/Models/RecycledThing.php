@@ -12,7 +12,6 @@ class RecycledThing extends Model
         'amount',
         'confirmed_amount',
         'recycled_user',
-        'confirmed_user',
     ];
 
     /**
@@ -21,6 +20,14 @@ class RecycledThing extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function confirmed_user()
+    {
+        return $this->belongsTo(User::class, 'confirmed_user_id');
     }
 
     /**

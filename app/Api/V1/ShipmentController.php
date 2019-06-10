@@ -17,7 +17,7 @@ class ShipmentController extends Controller
 
         $this->loadRelByQuery($query);
 
-        $this->parseWhere($query, ['customer_id', 'created_user', 'created_at']);
+        $this->parseWhere($query, ['customer_id', 'created_user_id', 'created_at']);
 
         if ($search = $request->get('q')) {
             $product_names = make_query_condition('product_name', $search);
@@ -69,11 +69,11 @@ class ShipmentController extends Controller
             return $this->errorBadRequest($validator);
         }
 
-        $c = $request->get('customer');
-        $customer = Customer::whereName($c)->first();
+        $custom = $request->get('customer');
+        $customer = Customer::whereName($custom)->first();
         if (is_null($customer)) {
             $customer = Customer::create([
-                'name' => $c
+                'name' => $custom
             ]);
         }
 
@@ -84,14 +84,8 @@ class ShipmentController extends Controller
             'weight',
             'amount'
         ]);
-
         $attributes['customer_id'] = $customer->id;
-
-        $attributes['created_user'] = vsprintf('uid%u:%s(%s)', [
-            $this->user()->id,
-            $this->user()->name,
-            $this->user()->email
-        ]);
+        $attributes['created_user_id'] = $this->user()->id;
 
         $shipment = Shipment::create($attributes);
 
