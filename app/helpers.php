@@ -52,3 +52,21 @@ if (!function_exists('trans')) {
             ->trans($id, $parameters, $domain, $locale);
     }
 }
+
+if (!function_exists('make_query_condition')) {
+    /**
+     * @param string $filed
+     * @param string $query_string
+     * @return array
+     */
+    function make_query_condition($filed, $query_string)
+    {
+        $keys = array_filter(explode(' ', $query_string), function ($key) {
+            return !empty($key);
+        });
+
+        return array_map(function ($key) use ($filed) {
+            return [$filed, 'like', "%{$key}%"];
+        }, $keys);
+    }
+}

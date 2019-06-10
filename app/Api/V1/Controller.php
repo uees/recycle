@@ -88,7 +88,7 @@ class Controller extends BaseController
      * @param array $fields
      * @return Builder
      */
-    protected function parseWhere(Builder $query, array $fields)
+    protected function parseWhere(Builder &$query, array $fields)
     {
         $request = app('Illuminate\Http\Request');
         foreach ($fields as $field) {
@@ -100,7 +100,8 @@ class Controller extends BaseController
                 if (count($matches) == 2) {
                     $min = $matches[1];
                     $query->where($field, '>', $min);
-                } elseif (count($matches) == 3) {
+                } else {
+                    // count($matches) == 3
                     $min = $matches[1];
                     $max = $matches[2];
                     $query->whereBetween($field, [$min, $max]);
@@ -119,11 +120,11 @@ class Controller extends BaseController
      * @param Builder $query
      * @return Builder
      */
-    protected function loadRelByQuery(Builder $query)
+    protected function loadRelByQuery(Builder &$query)
     {
         $request = app('Illuminate\Http\Request');
-        if ($request->filled('with')) {
-            $query->with(explode(',', $request->get('with')));
+        if ($request->filled('include')) {
+            $query->with(explode(',', $request->get('include')));
         }
 
         return $query;
@@ -136,8 +137,8 @@ class Controller extends BaseController
     protected function loadRelByModel(Model $model)
     {
         $request = app('Illuminate\Http\Request');
-        if ($request->filled('with')) {
-            $model->load(explode(',', $request->get('with')));
+        if ($request->filled('include')) {
+            $model->load(explode(',', $request->get('include')));
         }
 
         return $model;
