@@ -41,42 +41,23 @@ class ShipmentController extends Controller
 
     public function show($id)
     {
+        $shipment = Shipment::query()->findOrFail($id);
+        $this->loadRelByModel($shipment);
 
-    }
-
-    public function update($id)
-    {
-
-    }
-
-    public function destroy(Request $request)
-    {
-
+        return $this->response->item($shipment, new ShipmentTransformer());
     }
 
     // 发货
     public function store(Request $request)
     {
-        $validator = app('validator')->make($request->input(), [
-            'customer' => 'bail|required|string|max:256',
-            'product_name' => 'bail|required|string|max:128',
-            'product_batch' => 'nullable|string|max:64',
-            'weight' => 'bail|required|numeric',
-            'amount' => 'nullable|numeric',
+        $this->authorize('create', Shipment::class);
+        $this->validate($request, $this->validateRules());
+
+        $customer_name = $request->get('customer');
+
+        $customer = Customer::query()->firstOrCreate([
+            'name' => $customer_name
         ]);
-
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator);
-        }
-
-        $custom = $request->get('customer');
-        $customer = Customer::whereName($custom)->first();
-        if (is_null($customer)) {
-            $customer = Customer::create([
-                'name' => $custom
-            ]);
-        }
-
 
         $attributes = $request->only([
             'product_name',
@@ -92,5 +73,44 @@ class ShipmentController extends Controller
         return $this->response
             ->item($shipment, new ShipmentTransformer())
             ->setStatusCode(201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, $this->validateRules());
+
+        $shipment = Shipment::query()->findOrFail($id);
+        $this->authorize('update', $shipment);
+
+        $shipment->fill($request->all());
+
+        $shipment->save();
+
+        $this->loadRelByModel($shipment);
+
+        return $this->response->item($shipment, new ShipmentTransformer());
+    }
+
+    public function destroy($id)
+    {
+        $shipment = Shipment::findOrFail($id);
+        $this->authorize('delete', $shipment);
+
+        if ($shipment->delete()) {
+            return $this->response->noContent();
+        }
+
+        return $this->response->errorBadRequest('操作失败');
+    }
+
+    private function validateRules()
+    {
+        return [
+            'customer' => 'bail|required|max:255',
+            'product_name' => 'bail|required|max:128',
+            'product_batch' => 'nullable|max:64',
+            'weight' => 'bail|required|numeric',
+            'amount' => 'nullable|numeric',
+        ];
     }
 }

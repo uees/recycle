@@ -35,12 +35,16 @@ class User extends Model implements AuthenticatableContract, JWTSubject
     }
 
     /**
-     * @param $role
+     * @param string|array $roles
      * @return bool
      */
-    public function hasRole($role)
+    public function hasRole($roles)
     {
-        return $this->roles()->where('name', $role)->exists();
+        if (is_array($roles)) {
+            return $this->roles()->whereIn('name', $roles)->exists();
+        }
+
+        return $this->roles()->where('name', $roles)->exists();
     }
 
     // jwt 需要实现的方法

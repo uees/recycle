@@ -34,6 +34,9 @@ $app->configure('jwt');
 // api
 $app->configure('api');
 
+// my custom settings
+$app->configure('settings');
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings

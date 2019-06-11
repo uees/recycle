@@ -32,5 +32,25 @@ class AuthServiceProvider extends ServiceProvider
         $this->app['auth']->viaRequest('api', function ($request) {
             return auth_user();
         });
+
+        Gate::before(function ($user, $ability) {
+            // 管理员具有所有权限
+            if ($user->hasRole('admin')) {
+                return true;
+            }
+        });
+
+        // 注册策略
+        Gate::policy(\App\Models\Shipment::class, \App\Policies\ShipmentPolicy::class);
+        Gate::policy(\App\Models\QcRecord::class, \App\Policies\QcRecordPolicy::class);
+        Gate::policy(\App\Models\RecycledThing::class, \App\Policies\RecycledThingPolicy::class);
+
+        Gate::define('update-customers', function ($user, $customer) {
+            return $user->hasRole(['finished_warehouse_keeper', 'boss', 'management_representative']);
+        });
+
+        Gate::define('update-roles', function ($user, $role) {
+            return $user->hasRole(['boss', 'management_representative']);
+        });
     }
 }

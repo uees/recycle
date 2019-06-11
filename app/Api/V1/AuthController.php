@@ -13,14 +13,10 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $validator = app('validator')->make($request->all(), [
+        $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
-        if ($validator->fails()) {
-            return $this->errorBadRequest($validator);
-        }
 
         $credentials = $request->only('email', 'password');
         // 验证失败返回401

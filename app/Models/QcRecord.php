@@ -16,7 +16,7 @@ class QcRecord extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function customer()
+    public function recycled_thing()
     {
         return $this->belongsTo(RecycledThing::class, 'recycled_thing_id');
     }
