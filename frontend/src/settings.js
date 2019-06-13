@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
     title: '容大回收追踪系统',
 
