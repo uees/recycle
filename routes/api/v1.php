@@ -39,7 +39,7 @@ $api->version('v1', [
         'uses' => 'UserController@show',
     ]);
 
-    $api->group(['middleware' => 'api.auth'], function (Dingo\Api\Routing\Router $api) {
+    $api->group(['middleware' => ['refresh_token', 'api.auth']], function (Dingo\Api\Routing\Router $api) {
         $api->put('auth/refresh', [
             'as' => 'auth.refresh',
             'uses' => 'AuthController@refresh',

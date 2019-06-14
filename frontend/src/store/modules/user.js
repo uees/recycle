@@ -28,8 +28,6 @@ const actions = {
     // user login
     async login({ commit }, userInfo) {
         const { email, password } = userInfo
-        // eslint-disable-next-line
-        console.log(email, password)
         const response = await login({ email: email.trim(), password: password })
         const { data } = response.data
         commit('SET_TOKEN', data.token)

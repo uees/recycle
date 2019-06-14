@@ -72,12 +72,12 @@ $app->singleton(
 $app->middleware([
     // 根据 accept-language 设置语言
     'locale' => App\Http\Middleware\ChangeLocale::class,
-    App\Http\Middleware\CorsMiddleware::class,
-    App\Http\Middleware\RefreshToken::class,
+    'cors' => App\Http\Middleware\CorsMiddleware::class,
 ]);
 
 $app->routeMiddleware([
     // 'cors' => App\Http\Middleware\CorsMiddleware::class,
+    'refresh_token' => App\Http\Middleware\RefreshToken::class,
     'auth' => App\Http\Middleware\Authenticate::class,
     'serializer' => \Liyu\Dingo\SerializerSwitch::class,
 ]);

@@ -2,10 +2,9 @@ import router from './router'
 import store from './store'
 import Toast from 'muse-ui-toast';
 import NProgress from 'muse-ui-progress';
+import 'muse-ui-progress/dist/muse-ui-progress.css';
 import { getToken } from '@/utils/auth' // get token from cookie
 import pageTitle from '@/utils/page-title'
-
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
 
@@ -36,7 +35,7 @@ router.beforeEach(async (to, from, next) => {
                     next()
                 } catch (error) {
                     // remove token and go to login page to re-login
-                    await store.dispatch('user/resetToken')
+                    await store.dispatch('user/removeToken')
                     Toast.error(error || 'Has Error')
                     next(`/login?redirect=${to.path}`)
                     NProgress.done()

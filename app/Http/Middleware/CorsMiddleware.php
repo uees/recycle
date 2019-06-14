@@ -9,8 +9,8 @@ class CorsMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -28,6 +28,7 @@ class CorsMiddleware
         }
 
         $response = $next($request);
+
         foreach ($headers as $key => $value) {
             $response->header($key, $value);
         }
