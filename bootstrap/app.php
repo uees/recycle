@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
+    (new Dotenv\Dotenv(__DIR__ . '/../'))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
     //
 }
@@ -20,7 +20,7 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-    realpath(__DIR__.'/../')
+    realpath(__DIR__ . '/../')
 );
 
 $app->withFacades();
@@ -72,11 +72,12 @@ $app->singleton(
 $app->middleware([
     // 根据 accept-language 设置语言
     'locale' => App\Http\Middleware\ChangeLocale::class,
-    // App\Http\Middleware\ExampleMiddleware::class
+    App\Http\Middleware\CorsMiddleware::class,
+    App\Http\Middleware\RefreshToken::class,
 ]);
 
 $app->routeMiddleware([
-    'cors' => palanik\lumen\Middleware\LumenCors::class,
+    // 'cors' => App\Http\Middleware\CorsMiddleware::class,
     'auth' => App\Http\Middleware\Authenticate::class,
     'serializer' => \Liyu\Dingo\SerializerSwitch::class,
 ]);
@@ -125,8 +126,8 @@ $app->singleton(Illuminate\Auth\AuthManager::class, function (Laravel\Lumen\Appl
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/api/v1.php';
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/api/v1.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;

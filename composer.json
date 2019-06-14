@@ -12,7 +12,7 @@
         "illuminate/mail": "^5.5",
         "tymon/jwt-auth": "1.0.0-rc.1",
         "guzzlehttp/guzzle": "^6.3",
-        "palanik/lumen-cors": "^0.0.3",
+        "palanik/lumen-cors": "dev-master",
         "liyu/dingo-serializer-switch": "^0.3.1"
     },
     "require-dev": {
