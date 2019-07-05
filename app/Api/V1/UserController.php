@@ -59,6 +59,45 @@ class UserController extends Controller
             ->setStatusCode(201);
     }
 
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [
+            'email' => 'required|email',
+            'name' => 'required|string',
+        ]);
+
+        if (User::where('id', '<>', $id)->where('email', $request->get('email'))->exists()) {
+            $this->response->errorBadRequest('邮箱已经注册');
+        }
+
+        $user = User::whereId($id)->firstOrFail();
+
+        $this->authorize('update-users', $user);
+
+        $user->fill($request->only(['email', 'name']));
+        if ($password = $request->get('password')) {
+            $user->password = app('hash')->make($password);
+        }
+        $user->save();
+
+        return $this->response
+            ->item($user, new UserTransformer())
+            ->setStatusCode(201);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+
+        $this->authorize('delete-users', $user);
+
+        if ($user->delete()) {
+            return $this->response->noContent();
+        }
+
+        return $this->response->errorBadRequest('操作失败');
+    }
+
     public function me()
     {
         return $this->response->item($this->user(), new UserTransformer());

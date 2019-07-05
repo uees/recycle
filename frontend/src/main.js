@@ -1,24 +1,41 @@
 import Vue from 'vue'
-import MuseUI from 'muse-ui'
-import Loading from 'muse-ui-loading';
-import App from './App.vue'
+
+import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+
+import '@/styles/index.scss' // global css
+
+import App from './App'
 import store from './store'
 import router from './router'
-import './permission'
-import './registerServiceWorker'
 
-import 'typeface-roboto'
-import 'muse-ui/dist/muse-ui.css'
-import 'muse-ui-loading/dist/muse-ui-loading.css';
-// import 'muse-ui-message/dist/muse-ui-message.css'
+import '@/icons' // icon
+import '@/permission' // permission control
 
-Vue.use(MuseUI);
-Vue.use(Loading);
+/**
+ * If you don't want to use mock-server
+ * you want to use MockJs for mock api
+ * you can execute: mockXHR()
+ *
+ * Currently MockJs will be used in the production environment,
+ * please remove it before going online! ! !
+ */
+import { mockXHR } from '../mock'
+if (process.env.NODE_ENV === 'production') {
+  mockXHR()
+}
+
+// set ElementUI lang to EN
+Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
 
 new Vue({
+  el: '#app',
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+})

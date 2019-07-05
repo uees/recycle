@@ -1,18 +1,16 @@
 module.exports = {
 
-    title: '容大回收追踪系统',
+  title: 'Vue Admin Template',
 
-    /**
-     * @type {boolean} true | false
-     * @description Whether fix the header
-     */
-    fixedHeader: false,
+  /**
+   * @type {boolean} true | false
+   * @description Whether fix the header
+   */
+  fixedHeader: false,
 
-    /**
-     * @type {boolean} true | false
-     * @description Whether show the logo in sidebar
-     */
-    sidebarLogo: false,
-
-    tokenKey: "rongda_recycle_system",
+  /**
+   * @type {boolean} true | false
+   * @description Whether show the logo in sidebar
+   */
+  sidebarLogo: false
 }

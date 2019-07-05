@@ -21,24 +21,6 @@ $api->version('v1', [
         'uses' => 'AuthController@login',
     ]);
 
-    // User
-    $api->post('users', [
-        'as' => 'users.store',
-        'uses' => 'UserController@store',
-    ]);
-
-    // user list
-    $api->get('users', [
-        'as' => 'users.index',
-        'uses' => 'UserController@index',
-    ]);
-
-    // user detail
-    $api->get('users/{id}', [
-        'as' => 'users.show',
-        'uses' => 'UserController@show',
-    ]);
-
     $api->group(['middleware' => ['refresh_token', 'api.auth']], function (Dingo\Api\Routing\Router $api) {
         $api->put('auth/refresh', [
             'as' => 'auth.refresh',
@@ -50,8 +32,14 @@ $api->version('v1', [
             'uses' => 'AuthController@logout',
         ]);
 
-        // USER
-        // my detail
+        // 用户 api
+        $api->get('users', 'UserController@index');
+        $api->post('users', 'UserController@store');
+        $api->get('users/{id}', 'UserController@show');
+        $api->patch('users/{id}', 'UserController@update');
+        $api->delete('users/{id}','UserController@destroy');
+
+        // get me info
         $api->get('user', [
             'as' => 'user.me',
             'uses' => 'UserController@me',
@@ -68,5 +56,56 @@ $api->version('v1', [
             'as' => 'user.password.update',
             'uses' => 'UserController@password',
         ]);
+
+        // 入库 api
+        $api->get('entering-warehouses', [
+            'as' => 'entering_warehouses.index',
+            'uses' => 'EnteringWarehouseController@index',
+        ]);
+        $api->post('entering-warehouses', [
+            'as' => 'entering_warehouses.store',
+            'uses' => 'EnteringWarehouseController@store',
+        ]);
+        $api->get('entering-warehouses/{id}', [
+            'as' => 'entering_warehouses.show',
+            'uses' => 'EnteringWarehouseController@show',
+        ]);
+        $api->patch('entering-warehouses/{id}', [
+            'as' => 'entering_warehouses.update',
+            'uses' => 'EnteringWarehouseController@update',
+        ]);
+        $api->delete('entering-warehouses/{id}', [
+            'as' => 'entering_warehouses.delete',
+            'uses' => 'EnteringWarehouseController@destroy',
+        ]);
+
+        // 发货 api
+        $api->get('shipments', 'ShipmentController@index');
+        $api->post('shipments', 'ShipmentController@store');
+        $api->get('shipments/{id}', 'ShipmentController@show');
+        $api->patch('shipments/{id}', 'ShipmentController@update');
+        $api->delete('shipments/{id}','ShipmentController@destroy');
+
+        // 回收 api
+        $api->get('recycles', 'RecycleController@index');
+        $api->get('recycles/{id}', 'RecycleController@show');
+        $api->post('recycles/recycle', 'RecycleController@recycle');
+        $api->patch('recycles/recycle/{id}', 'RecycleController@updateRecycled');
+        $api->patch('recycles/confirm/{id}', 'RecycleController@confirm');
+        $api->delete('recycles/{id}','RecycleController@destroy');
+
+        // 检测 api
+        $api->get('qc-records', 'QcRecordController@index');
+        $api->post('qc-records', 'QcRecordController@store');
+        $api->get('qc-records/{id}', 'QcRecordController@show');
+        $api->patch('qc-records/{id}', 'QcRecordController@update');
+        $api->delete('qc-records/{id}','QcRecordController@destroy');
+
+        // 客户 api
+        $api->get('customers', 'CustomerController@index');
+        $api->post('customers', 'CustomerController@store');
+        $api->get('customers/{id}', 'CustomerController@show');
+        $api->patch('customers/{id}', 'CustomerController@update');
+        $api->delete('customers/{id}','CustomerController@destroy');
     });
 });
