@@ -1,4 +1,5 @@
 import { mapGetters } from 'vuex'
+import { deepClone } from '@/utils'
 
 export default {
   data() {
@@ -15,46 +16,44 @@ export default {
     ...mapGetters([
       'user'
     ])
-    // 实现者必须实现以下代码
     // ...mapState('some/nested/module', {
     //  action: state => state.action,
     //  obj: state => state.obj,
-    //  dialogVisible: state.dialogVisible,
+    //  dialogVisible: state => state.dialogVisible
     // })
   },
 
   methods: {
-    newObj() { // createObj 需要继承者实现
-      return {}
-    },
-    create() {
+    // ...mapActions('some/nested/module', [
+    //  'doAction',
+    //  'resetObj',
+    //  'setObj',
+    //  'close'
+    // ]),
+    async create() {
       this.$refs['obj_form'].validate(async valid => {
         if (valid) {
           this.obj.user_id = this.user.id
           const response = await this.api.store(this.obj)
           const { data } = response
-          this.obj = data // 灰常重要！！！
+          await this.setObj(data)
           this.done()
-        } else {
-          return false
         }
       })
     },
-    update() {
+    async update() {
       this.$refs['obj_form'].validate(async valid => {
         if (valid) {
           this.obj.modified_user_id = this.user.id
           const response = await this.api.update(this.obj.id, this.obj)
           const { data } = response.data
-          this.obj = data // 灰常重要！！！
+          await this.setObj(data)
           this.done()
-        } else {
-          return false
         }
       })
     },
     done() {
-      this.$emit('done')
+      this.$emit('action-done', deepClone(this.obj))
       this.$notify({
         title: '成功',
         message: '操作成功',
@@ -62,9 +61,6 @@ export default {
         duration: 2000
       })
       this.close()
-    },
-    close() {
-      // this.$store.dispatch('some/nested/module/colse')
     }
   }
 }

@@ -4,7 +4,7 @@ import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
-  id: '',
+  id: undefined,
   email: '',
   name: '',
   avatar: '',
@@ -51,13 +51,14 @@ const actions = {
       throw new Error('Verification failed, please Login again.')
     }
 
-    if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-      commit('SET_ROLES', data.roles)
+    const { id, name, email, avatar, roles } = data
+
+    if (roles && roles.data.length > 0) { // 验证返回的roles是否是一个非空数组
+      commit('SET_ROLES', roles.data)
     } else {
       throw new Error('getInfo: roles must be a non-null array !')
     }
 
-    const { id, name, email, avatar } = data
     commit('SET_ID', id)
     commit('SET_NAME', name)
     commit('SET_EMAIL', email)

@@ -61,7 +61,7 @@ export const constantRoutes = [
     children: [{
       path: 'index',
       name: 'EnteringWarehouses',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/entering_warehouses/index'),
       meta: { title: '入库', icon: 'table' }
     }]
   },

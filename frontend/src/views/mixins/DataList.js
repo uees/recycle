@@ -6,7 +6,9 @@ export default {
       listLoading: false,
       updateIndex: -1,
       queryParams: {
-        q: ''
+        q: '',
+        sort_by: 'id',
+        order: 'desc'
       }
     }
   },
@@ -44,7 +46,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        await this.api.delete(row.id)
+        await this.api.destroy(row.id)
         const index = this.tableData.indexOf(row)
         this.tableData.splice(index, 1)
         this.$message({
@@ -64,11 +66,13 @@ export default {
     handleDownload() {
       this.unimplemented()
     },
-    createDone() {
-      this.tableData.unshift(this.obj)
-    },
-    updateDone() {
-      this.tableData.splice(this.updateIndex, 1, this.obj)
+    actionDone(obj) {
+      if (this.action === 'create') {
+        this.tableData.unshift(obj)
+      } else if (this.action === 'update') {
+        this.tableData.splice(this.updateIndex, 1, obj)
+      }
+      this.resetObj()
     },
     unimplemented() {
       this.$message({

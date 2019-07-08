@@ -1,8 +1,8 @@
 <template>
   <div class="data-form-dialog">
     <el-dialog
-      :title="dialogTitleMap[action]"
-      :visible.sync="dialogFormVisible"
+      :title="titleMap[action]"
+      :visible.sync="dialogVisible"
       @close="close"
     >
       <el-form
@@ -78,7 +78,8 @@
 </template>
 
 <script>
-import dialog from '../mixins/dialog'
+import { mapState, mapActions } from 'vuex'
+import DataFormDialog from '../mixins/DataFormDialog'
 import { enteringWarehousesApi } from '@/api/erp'
 
 export function newObj() {
@@ -99,14 +100,15 @@ export function newObj() {
 export default {
   name: 'DataForm',
   mixins: [
-    dialog
+    DataFormDialog
   ],
   data() {
     return {
       api: enteringWarehousesApi,
       objRules: {
-        name: { required: true, message: '必填项', trigger: 'blur' },
-        slug: { required: true, message: '必填项', trigger: 'blur' }
+        product_name: { required: true, message: '必填项', trigger: 'blur' },
+        product_batch: { required: true, message: '必填项', trigger: 'blur' },
+        weight: { required: true, message: '必填项', trigger: 'blur' }
       },
       pickerOptions: {
         disabledDate(time) {
@@ -135,24 +137,20 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState('erp/entering_warehouse', {
+      action: state => state.action,
+      obj: state => state.obj,
+      dialogVisible: state => state.dialogVisible
+    })
+  },
   methods: {
-    newObj() {
-      return newObj()
-    },
-    update() {
-      this.$refs['obj_form'].validate(valid => {
-        if (valid) {
-          const postData = Object.assign({}, this.obj, { with: 'testWay' })
-          this.api.update(this.obj.id, postData).then(response => {
-            const { data } = response.data
-            this.obj = data
-            this.done()
-          })
-        } else {
-          return false
-        }
-      })
-    }
+    ...mapActions('erp/entering_warehouse', [
+      'doAction',
+      'resetObj',
+      'setObj',
+      'close'
+    ])
   }
 }
 </script>

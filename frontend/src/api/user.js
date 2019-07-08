@@ -21,7 +21,10 @@ export function refreshToken() {
 export function getInfo() {
   return request({
     url: '/user',
-    method: 'get'
+    method: 'get',
+    params: {
+      include: 'roles'
+    }
   })
 }
 

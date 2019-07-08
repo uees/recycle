@@ -1,8 +1,8 @@
-import EnteringWarehouse from '@/defines/models'
+import { EnteringWarehouse } from '@/defines/models'
 
 const state = {
   action: undefined,
-  obj: undefined,
+  obj: EnteringWarehouse(),
   dialogVisible: false
 }
 
