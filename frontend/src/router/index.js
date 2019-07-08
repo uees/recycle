@@ -56,6 +56,39 @@ export const constantRoutes = [
   },
 
   {
+    path: '/entering-warehouses',
+    component: Layout,
+    children: [{
+      path: 'index',
+      name: 'EnteringWarehouses',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '入库', icon: 'table' }
+    }]
+  },
+
+  {
+    path: '/shipments',
+    component: Layout,
+    children: [{
+      path: 'index',
+      name: 'Shipments',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '发货', icon: 'table' }
+    }]
+  },
+
+  {
+    path: '/recycled-things',
+    component: Layout,
+    children: [{
+      path: 'index',
+      name: 'RecycledThings',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '回收', icon: 'table' }
+    }]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',

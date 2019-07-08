@@ -4,80 +4,78 @@ import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
+  id: '',
+  email: '',
   name: '',
-  avatar: ''
+  avatar: '',
+  roles: []
 }
 
 const mutations = {
+  SET_ID: (state, id) => {
+    state.id = id
+  },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_EMAIL: (state, email) => {
+    state.email = email
+  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 }
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  async login({ commit }, userInfo) {
+    const { email, password } = userInfo
+    const response = await login({ email: email.trim(), password: password })
+    const { data } = response
+    commit('SET_TOKEN', data.token)
+    setToken(data.token)
   },
 
   // get user info
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+  async getInfo({ commit, state }) {
+    const response = await getInfo()
+    const { data } = response
 
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
+    if (!data) {
+      throw new Error('Verification failed, please Login again.')
+    }
 
-        const { name, avatar } = data
+    if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+      commit('SET_ROLES', data.roles)
+    } else {
+      throw new Error('getInfo: roles must be a non-null array !')
+    }
 
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
+    const { id, name, email, avatar } = data
+    commit('SET_ID', id)
+    commit('SET_NAME', name)
+    commit('SET_EMAIL', email)
+    commit('SET_AVATAR', avatar)
   },
 
   // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  async logout({ commit, state }) {
+    await logout()
+    commit('SET_TOKEN', '')
+    removeToken()
+    resetRouter()
   },
 
   // remove token
-  resetToken({ commit }) {
-    return new Promise(resolve => {
-      commit('SET_TOKEN', '')
-      removeToken()
-      resolve()
-    })
+  async resetToken({ commit }) {
+    commit('SET_TOKEN', '')
+    removeToken()
   }
 }
 
