@@ -111,7 +111,7 @@
         width="80px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.weight }}kg</span>
+          <span v-if="scope.row.weight">{{ scope.row.weight }}kg</span>
         </template>
       </el-table-column>
 
@@ -121,7 +121,7 @@
         width="95"
       >
         <template slot-scope="{row}">
-          <span>{{ row.amount }}桶</span>
+          <span v-if="row.amount">{{ row.amount }}桶</span>
         </template>
       </el-table-column>
 
@@ -245,17 +245,6 @@ export default {
       // 具体的实现
       this.unimplemented()
     },
-    /* handleDelete(row) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
-      })
-      const index = this.tableData.indexOf(row)
-      this.tableData.splice(index, 1)
-    },
-    */
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
@@ -264,9 +253,6 @@ export default {
           return v[j]
         }
       }))
-    },
-    actionDone() {
-
     }
   }
 }
