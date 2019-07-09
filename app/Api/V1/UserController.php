@@ -3,8 +3,8 @@
 namespace App\Api\V1;
 
 use App\Models\User;
-use App\Models\Authorization;
-use App\Jobs\SendRegisterEmail;
+// use App\Models\Authorization;
+// use App\Jobs\SendRegisterEmail;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -49,13 +49,15 @@ class UserController extends Controller
 
         $user = User::create($attributes);
 
+        $this->loadRelByModel($user);
+
         // 用户注册成功后发送邮件
-        dispatch(new SendRegisterEmail($user));
+        // dispatch(new SendRegisterEmail($user));
         // 201 with location
-        $location = dingo_route('v1', 'users.show', $user->id);
+        // $location = dingo_route('v1', 'users.show', $user->id);
 
         return $this->response->item($user, new UserTransformer())
-            ->header('Location', $location)
+            // ->header('Location', $location)
             ->setStatusCode(201);
     }
 
@@ -80,6 +82,8 @@ class UserController extends Controller
         }
         $user->save();
 
+        $this->loadRelByModel($user);
+
         return $this->response
             ->item($user, new UserTransformer())
             ->setStatusCode(201);
@@ -100,7 +104,11 @@ class UserController extends Controller
 
     public function me()
     {
-        return $this->response->item($this->user(), new UserTransformer());
+        $user = $this->user();
+
+        $this->loadRelByModel($user);
+
+        return $this->response->item($user, new UserTransformer());
     }
 
     public function updateMe(Request $request)
@@ -118,6 +126,8 @@ class UserController extends Controller
         if ($attributes) {
             $user->update($attributes);
         }
+
+        $this->loadRelByModel($user);
 
         return $this->response->item($user, new UserTransformer());
     }

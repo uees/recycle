@@ -63,6 +63,8 @@ class RecycleController extends Controller
         $recycled->customer()->associate($customer);
         $recycled->save();
 
+        $this->loadRelByModel($recycled);
+
         return $this->response
             ->item($recycled, new RecycledThingTransformer())
             ->setStatusCode(201);
@@ -88,6 +90,8 @@ class RecycleController extends Controller
         $recycled->customer()->associate($customer);
         $recycled->save();
 
+        $this->loadRelByModel($recycled);
+
         return $this->response->item($recycled, new RecycledThingTransformer());
     }
 
@@ -107,6 +111,8 @@ class RecycleController extends Controller
         $recycled->confirmed_user()->associate($this->user);
         $recycled->save();
 
+        $this->loadRelByModel($recycled);
+
         return $this->response->item($recycled, new RecycledThingTransformer());
     }
 
@@ -115,6 +121,10 @@ class RecycleController extends Controller
         $recycled = RecycledThing::findOrFail($id);
 
         $this->authorize('delete', $recycled);
+
+        foreach ($recycled->qc_records as $record) {
+            $record->delete();
+        }
 
         if ($recycled->delete()) {
             return $this->response->noContent();

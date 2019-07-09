@@ -72,7 +72,7 @@ class ShipmentController extends Controller
             $shipment->created_at = $created_at;
         }
         $shipment->customer()->associate($customer);
-        $shipment->created_user()->associate($this->user);
+        $shipment->created_user()->associate($this->user());
         $shipment->save();
 
         $this->loadRelByModel($shipment);

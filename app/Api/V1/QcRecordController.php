@@ -50,6 +50,8 @@ class QcRecordController extends Controller
 
         $record->save();
 
+        $this->loadRelByModel($record);
+
         return $this->response
             ->item($record, new QcRecordTransformer())
             ->setStatusCode(201);
@@ -68,6 +70,7 @@ class QcRecordController extends Controller
 
         $record->fill($request->only(['recycled_thing_id', 'bad_amount']));
         $record->save();
+        $this->loadRelByModel($record);
 
         return $this->response->item($record, new QcRecordTransformer());
     }
