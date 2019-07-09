@@ -9,15 +9,8 @@
         @keyup.enter.native="handleFilter"
       />
       <el-input
-        v-model="queryParams.product_name"
-        placeholder="品名"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-input
-        v-model="queryParams.product_batch"
-        placeholder="批次"
+        v-model="queryParams.customer_id"
+        placeholder="客户"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -48,12 +41,10 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      @sort-change="sortChange"
     >
       <el-table-column
         label="序号"
         prop="id"
-        sortable="custom"
         align="center"
         width="80"
       >
@@ -63,25 +54,32 @@
       </el-table-column>
 
       <el-table-column
-        label="入库日期"
+        label="发货日期"
         width="130px"
         align="center"
       >
         <template slot-scope="scope">
-          <!-- scope.row.entered_at | parseTime('{y}-{m}-{d} {h}:{i}') -->
-          <span>{{ scope.row.entered_at }}</span>
+          <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        label="产品"
-        min-width="130px"
+        label="客户"
+        align="center"
+        min-width="110px"
       >
         <template slot-scope="{row}">
-          <span
-            class="link-type"
-            @click="handleUpdate(row)"
-          >{{ row.product_name }}</span>
+          <span>{{ row.customer }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        label="品名"
+        width="110px"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.product_name }}</span>
         </template>
       </el-table-column>
 
@@ -107,6 +105,7 @@
 
       <el-table-column
         label="重量"
+        align="center"
         width="120px"
       >
         <template slot-scope="scope">
@@ -125,12 +124,12 @@
       </el-table-column>
 
       <el-table-column
-        label="生产日期"
-        width="130px"
+        label="发货人"
+        width="100px"
         align="center"
       >
         <template slot-scope="{row}">
-          <span>{{ row.made_at }}</span>
+          <span>{{ row.created_user }}</span>
         </template>
       </el-table-column>
 
@@ -181,55 +180,41 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { enteringWarehousesApi } from '@/api/erp'
-import { EnteringWarehouse } from '@/defines/models'
+import { shipmentsApi } from '@/api/erp'
+import { Shipment } from '@/defines/models'
 import DataList from '../mixins/DataList'
 import Pagination from '../mixins/Pagination'
 import DataFormDialog from './DataFormDialog'
 
 export default {
-  name: 'EnteringWarehouses',
+  name: 'Shipment',
   components: { DataFormDialog },
   mixins: [DataList, Pagination],
   data() {
     return {
-      api: enteringWarehousesApi,
+      api: shipmentsApi,
       queryParams: {
-        product_name: undefined,
-        product_batch: undefined
+        customer_id: undefined,
+        created_user_id: undefined,
+        created_at: undefined,
+        include: 'customer'
       }
     }
   },
   computed: {
-    ...mapState('erp/entering_warehouse', {
+    ...mapState('erp/shipment', {
       formDialog: state => state.formDialog
     })
   },
   methods: {
-    ...mapActions('erp/entering_warehouse', [
+    ...mapActions('erp/shipment', [
       'resetFormDialog',
       'setFormDialog'
     ]),
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.queryParams.sort_by = 'id'
-        this.queryParams.order = 'asc'
-      } else {
-        this.queryParams.sort_by = 'id'
-        this.queryParams.order = 'desc'
-      }
-      this.fetchData()
-    },
     handleCreate() {
       this.setFormDialog({
         action: 'create',
-        formData: EnteringWarehouse(),
+        formData: Shipment(),
         index: -1,
         visible: true
       })

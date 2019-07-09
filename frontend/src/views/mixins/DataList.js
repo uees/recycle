@@ -32,11 +32,11 @@ export default {
       const response = await this.api.list({ params: this.queryParams })
       const { data } = response
       this.tableData = data
-      this.pagination(response)
+      this.paginate(response)
       this.listLoading = false
     },
-    pagination(response) {
-      // pagination 中实现
+    paginate(response) {
+      // Pagination 中实现
     },
     handleFilter() {
       this.queryParams.page = 1

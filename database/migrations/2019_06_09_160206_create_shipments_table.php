@@ -19,6 +19,7 @@ class CreateShipmentsTable extends Migration
             $table->unsignedInteger('created_user_id')->nullable();
             $table->string('product_name', 128);
             $table->string('product_batch', 64)->index();
+			$table->string('spec', 64)->nullable();
             $table->decimal('weight');
             $table->decimal('amount')->nullable();
             $table->timestamps();

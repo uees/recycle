@@ -16,9 +16,11 @@ export default {
 
   methods: {
     paginate(response) {
-      const { meta } = response.data
-      this.total = +meta.total
-      this.pageCount = Math.ceil(this.total / this.queryParams.per_page)
+      const { meta } = response
+      const { pagination } = meta
+      this.total = +pagination.total
+      // this.pageCount = Math.ceil(this.total / this.queryParams.per_page)
+      this.pageCount = +pagination.total_pages
     },
     async handleSizeChange(val) {
       this.queryParams.per_page = val

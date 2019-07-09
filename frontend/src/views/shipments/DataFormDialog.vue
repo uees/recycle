@@ -14,7 +14,31 @@
         style="width: 400px; margin-left:50px;"
       >
 
-        <!--prop 属性设置为需校验的字段名-->
+        <el-form-item
+          label="客户"
+          prop="customer_id"
+        >
+          <el-select
+            v-model="formData.customer_id"
+            filterable
+            clearable
+            allow-create
+            remote
+            reserve-keyword
+            default-first-option
+            placeholder="请输入关键词"
+            :remote-method="apiSearchCustomers"
+            :loading="customers.loading"
+          >
+            <el-option
+              v-for="customer in customers.list"
+              :key="customer.id"
+              :label="customer.name"
+              :value="customer.id"
+            />
+          </el-select>
+        </el-form-item>
+
         <el-form-item
           label="产品"
           prop="product_name"
@@ -44,26 +68,15 @@
         </el-form-item>
 
         <el-form-item
-          label="生产日期"
+          label="发货日期"
           prop="made_at"
         >
           <el-date-picker
-            v-model="formData.made_at"
+            v-model="formData.created_at"
             align="right"
             type="date"
             value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="选择日期"
-          />
-        </el-form-item>
-
-        <el-form-item label="入库日期">
-          <el-date-picker
-            v-model="formData.entered_at"
-            align="right"
-            type="date"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择日期"
-            :picker-options="pickerOptions"
           />
         </el-form-item>
       </el-form>
@@ -85,7 +98,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import DataFormDialog from '../mixins/DataFormDialog'
-import { enteringWarehousesApi } from '@/api/erp'
+import { shipmentsApi, customersApi } from '@/api/erp'
 
 export default {
   name: 'DataForm',
@@ -94,42 +107,21 @@ export default {
   ],
   data() {
     return {
-      api: enteringWarehousesApi,
+      api: shipmentsApi,
       dataRules: {
+        customer_id: { required: true, message: '必填项', trigger: 'blur' },
         product_name: { required: true, message: '必填项', trigger: 'blur' },
         product_batch: { required: true, message: '必填项', trigger: 'blur' },
-        weight: { required: true, message: '必填项', trigger: 'blur' },
-        made_at: { required: true, message: '必填项', trigger: 'blur' }
+        weight: { required: true, message: '必填项', trigger: 'blur' }
       },
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now()
-        },
-        shortcuts: [{
-          text: '今天',
-          onClick(picker) {
-            picker.$emit('pick', new Date())
-          }
-        }, {
-          text: '昨天',
-          onClick(picker) {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24)
-            picker.$emit('pick', date)
-          }
-        }, {
-          text: '一周前',
-          onClick(picker) {
-            const date = new Date()
-            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', date)
-          }
-        }]
+      customers: {
+        list: [],
+        loading: false
       }
     }
   },
   computed: {
-    ...mapState('erp/entering_warehouse', {
+    ...mapState('erp/shipment', {
       formDialog: state => state.formDialog
     }),
     action() {
@@ -143,9 +135,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions('erp/entering_warehouse', [
+    ...mapActions('erp/shipment', [
       'updateFormDialog'
-    ])
+    ]),
+    async apiSearchCustomers(query) {
+      if (query !== '') {
+        this.customers.loading = true
+        const res = await customersApi.list({ params: { q: query }})
+        this.customers.loading = false
+        this.customers.list = res.data
+      } else {
+        this.customers.list = []
+      }
+    }
   }
 }
 </script>

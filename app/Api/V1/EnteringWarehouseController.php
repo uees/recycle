@@ -45,20 +45,13 @@ class EnteringWarehouseController extends Controller
             'weight' => 'bail|required|numeric',
             'amount' => 'nullable|numeric',
             'made_at' => 'required',
-            'entered_at' => 'required',
+            'entered_at' => 'nullable',
         ]);
 
         // $this->authorize('update-customers', Customer::class);
 
         $product = new EnteringWarehouse();
-        $product->fill($request->only([
-            'product_name',
-            'product_batch',
-            'weight',
-            'amount',
-            'made_at',
-            'entered_at'
-        ]));
+        $product->fill($request->all());
         $product->save();
 
         return $this->response
