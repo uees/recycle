@@ -18,7 +18,7 @@ class RecycledThingTransformer extends TransformerAbstract
         return $recycledThing->attributesToArray();
     }
 
-    public function includeCustomers(RecycledThing $recycledThing)
+    public function includeCustomer(RecycledThing $recycledThing)
     {
         if (!$recycledThing->customer()) {
             return $this->null();
@@ -27,7 +27,7 @@ class RecycledThingTransformer extends TransformerAbstract
         return $this->item($recycledThing->customer, new CustomerTransformer());
     }
 
-    public function includeCreatedUsers(RecycledThing $recycledThing)
+    public function includeCreatedUser(RecycledThing $recycledThing)
     {
         if (!$recycledThing->confirmed_user()->exists()) {
             return $this->null();

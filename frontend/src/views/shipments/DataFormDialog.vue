@@ -31,7 +31,7 @@
             :loading="customers.loading"
           >
             <el-option
-              v-for="customer in customers.list"
+              v-for="customer in customerOptions"
               :key="customer.id"
               :label="customer.name"
               :value="customer.id"
@@ -132,6 +132,15 @@ export default {
     },
     visible() {
       return this.formDialog.visible
+    },
+    customerOptions() {
+      if (this.customers.list.length === 0 && this.formData.customer) {
+        // 以免编辑时只显示数字
+        const customer = this.formData.customer.data
+        return this.customers.list.concat([customer])
+      }
+
+      return this.customers.list
     }
   },
   methods: {

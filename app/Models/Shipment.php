@@ -11,6 +11,7 @@ class Shipment extends Model
     protected $fillable = [
         'product_name',
         'product_batch',
+        'spec',
         'weight',
         'amount',
     ];
@@ -23,7 +24,6 @@ class Shipment extends Model
     protected $dates = [
         'created_at',
         'updated_at',
-        'confirmed_at'
     ];
 
     /**

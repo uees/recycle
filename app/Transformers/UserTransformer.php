@@ -14,7 +14,7 @@ class UserTransformer extends TransformerAbstract
     ];
 
     protected $defaultIncludes = [
-        // 'roles'
+        'roles'
     ];
 
     public function transform(User $user)

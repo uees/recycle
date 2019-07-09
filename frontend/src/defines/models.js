@@ -20,7 +20,7 @@ export function Shipment() {
     created_user_id: undefined,
     product_name: '',
     product_batch: '',
-    weight: 0,
+    weight: undefined,
     amount: undefined,
     created_at: undefined,
     updated_at: undefined

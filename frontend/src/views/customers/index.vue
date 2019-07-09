@@ -9,8 +9,8 @@
         @keyup.enter.native="handleFilter"
       />
       <el-input
-        v-model="queryParams.customer_id"
-        placeholder="客户"
+        v-model="queryParams.salesman"
+        placeholder="业务员"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -45,6 +45,7 @@
       <el-table-column
         label="序号"
         prop="id"
+        sortable="custom"
         align="center"
         width="80"
       >
@@ -54,83 +55,31 @@
       </el-table-column>
 
       <el-table-column
-        label="发货日期"
-        width="130px"
+        label="公司名称"
+        min-width="250px"
         align="center"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        label="客户"
-        align="center"
-        min-width="110px"
+        label="公司地址"
+        min-width="350px"
       >
         <template slot-scope="{row}">
-          <span v-if="row.customer">{{ row.customer.data.name }}</span>
-          <span v-else>{{ row.customer_id }}</span>
+          <span>{{ row.address }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        label="品名"
+        label="业务员"
         width="110px"
         align="center"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.product_name }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="批次"
-        width="110px"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.product_batch }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="规格"
-        width="80px"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <span style="color:red;">{{ scope.row.spec }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="重量"
-        align="center"
-        width="120px"
-      >
-        <template slot-scope="scope">
-          <span v-if="scope.row.weight">{{ scope.row.weight }}kg</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="数量"
-        align="center"
-        width="95"
-      >
-        <template slot-scope="{row}">
-          <span v-if="row.amount">{{ row.amount }}桶</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="发货人"
-        width="100px"
-        align="center"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.created_user }}</span>
+          <span>{{ scope.row.salesman }}</span>
         </template>
       </el-table-column>
 
@@ -181,52 +130,43 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { shipmentsApi } from '@/api/erp'
-import { Shipment } from '@/defines/models'
+import { customersApi } from '@/api/erp'
+import { Customer } from '@/defines/models'
 import DataList from '../mixins/DataList'
 import Pagination from '../mixins/Pagination'
 import DataFormDialog from './DataFormDialog'
 
 export default {
-  name: 'Shipment',
+  name: 'Customers',
   components: { DataFormDialog },
   mixins: [DataList, Pagination],
   data() {
     return {
-      api: shipmentsApi,
+      api: customersApi,
       queryParams: {
-        customer_id: undefined,
-        created_user_id: undefined,
-        created_at: undefined,
-        include: 'customer'
+        salesman: undefined
       }
     }
   },
   computed: {
-    ...mapState('erp/shipment', {
+    ...mapState('erp/customers', {
       formDialog: state => state.formDialog
     })
   },
   methods: {
-    ...mapActions('erp/shipment', [
+    ...mapActions('erp/customers', [
       'resetFormDialog',
       'setFormDialog'
     ]),
     handleCreate() {
-      const shipment = Shipment()
-      shipment.include = 'customer'
-
       this.setFormDialog({
         action: 'create',
-        formData: shipment,
+        formData: Customer(),
         index: -1,
         visible: true
       })
     },
     handleUpdate(scope) {
-      const shipment = scope.row
-      shipment.include = 'customer'
-
       this.setFormDialog({
         action: 'update',
         formData: scope.row,

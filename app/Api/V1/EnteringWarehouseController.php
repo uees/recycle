@@ -39,14 +39,7 @@ class EnteringWarehouseController extends Controller
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'product_name' => 'bail|required|max:256',
-            'product_batch' => 'bail|required|max:256',
-            'weight' => 'bail|required|numeric',
-            'amount' => 'nullable|numeric',
-            'made_at' => 'required',
-            'entered_at' => 'nullable',
-        ]);
+        $this->validate($request, $this->validateRules());
 
         // $this->authorize('update-customers', Customer::class);
 
@@ -61,14 +54,7 @@ class EnteringWarehouseController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'product_name' => 'bail|required|max:256',
-            'product_batch' => 'bail|required|max:256',
-            'weight' => 'bail|required|numeric',
-            'amount' => 'nullable|numeric',
-            'made_at' => 'required',
-            'entered_at' => 'required',
-        ]);
+        $this->validate($request, $this->validateRules());
 
         $product = EnteringWarehouse::query()
             ->where('id', $id)
@@ -76,14 +62,7 @@ class EnteringWarehouseController extends Controller
 
         // $this->authorize('update-customers', $product);
 
-        $product->fill($request->only([
-            'product_name',
-            'product_batch',
-            'weight',
-            'amount',
-            'made_at',
-            'entered_at'
-        ]));
+        $product->fill($request->all());
         $product->save();
 
         return $this->response
@@ -102,5 +81,17 @@ class EnteringWarehouseController extends Controller
         }
 
         return $this->response->errorBadRequest('操作失败');
+    }
+
+    private function validateRules()
+    {
+        return [
+            'product_name' => 'bail|required|max:256',
+            'product_batch' => 'bail|required|max:256',
+            'weight' => 'bail|required|numeric',
+            'amount' => 'nullable|numeric',
+            'made_at' => 'required',
+            'entered_at' => 'nullable',
+        ];
     }
 }

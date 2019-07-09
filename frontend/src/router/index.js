@@ -120,7 +120,7 @@ export const constantRoutes = [
       },
       {
         path: 'customers',
-        component: () => import('@/views/nested/menu2/index'),
+        component: () => import('@/views/customers/index'),
         name: 'Customer',
         meta: { title: '客户' }
       }

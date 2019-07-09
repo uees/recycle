@@ -50,25 +50,32 @@ class ShipmentController extends Controller
     // 发货
     public function store(Request $request)
     {
-        $this->authorize('create', Shipment::class);
         $this->validate($request, $this->validateRules());
+        $this->authorize('create', Shipment::class);
 
-        $customer_name = $request->get('customer');
+        $customer = $request->get('customer_id');
 
-        $customer = Customer::query()->firstOrCreate([
-            'name' => $customer_name
-        ]);
+        // 不是数字或数字字符串，则是新客户名称
+        if (!is_numeric($customer)) {
+            $customer = Customer::firstOrCreate([
+                'name' => $customer
+            ]);
+        } else {
+            $customer = Customer::where('id', $customer)
+                ->firstOrFail();
+        }
 
-        $attributes = $request->only([
-            'product_name',
-            'product_batch',
-            'weight',
-            'amount'
-        ]);
-        $attributes['customer_id'] = $customer->id;
-        $attributes['created_user_id'] = $this->user()->id;
+        $shipment = new Shipment();
+        $shipment->fill($request->all());
+        // created_at 设计的作用是发货日期, 是可填充的
+        if ($created_at = $request->get('created_at')) {
+            $shipment->created_at = $created_at;
+        }
+        $shipment->customer()->associate($customer);
+        $shipment->created_user()->associate($this->user);
+        $shipment->save();
 
-        $shipment = Shipment::create($attributes);
+        $this->loadRelByModel($shipment);
 
         return $this->response
             ->item($shipment, new ShipmentTransformer())
@@ -82,8 +89,24 @@ class ShipmentController extends Controller
         $shipment = Shipment::query()->findOrFail($id);
         $this->authorize('update', $shipment);
 
-        $shipment->fill($request->all());
+        $customer = $request->get('customer_id');
 
+        // 不是数字或数字字符串，则是新客户名称
+        if (!is_numeric($customer)) {
+            $customer = Customer::firstOrCreate([
+                'name' => $customer
+            ]);
+        } else {
+            $customer = Customer::where('id', $customer)
+                ->firstOrFail();
+        }
+
+        $shipment->fill($request->all());
+        // created_at 设计的作用是发货日期, 是可填充的
+        if ($created_at = $request->get('created_at')) {
+            $shipment->created_at = $created_at;
+        }
+        $shipment->customer()->associate($customer);
         $shipment->save();
 
         $this->loadRelByModel($shipment);
@@ -106,7 +129,7 @@ class ShipmentController extends Controller
     private function validateRules()
     {
         return [
-            'customer' => 'bail|required|max:255',
+            'customer_id' => 'bail|required|max:255',
             'product_name' => 'bail|required|max:128',
             'product_batch' => 'nullable|max:64',
             'weight' => 'bail|required|numeric',
