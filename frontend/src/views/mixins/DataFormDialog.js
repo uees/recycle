@@ -17,43 +17,43 @@ export default {
       'user'
     ])
     // ...mapState('some/nested/module', {
-    //  action: state => state.action,
-    //  obj: state => state.obj,
-    //  dialogVisible: state => state.dialogVisible
+    //  formDialog: state => state.formDialog
     // })
   },
 
   methods: {
     // ...mapActions('some/nested/module', [
-    //  'doAction',
-    //  'resetObj',
-    //  'setObj',
-    //  'close'
+    //  'updateFormDialog'
     // ]),
     async create() {
-      this.$refs['obj_form'].validate(async valid => {
+      this.$refs['data_form'].validate(async valid => {
         if (valid) {
-          this.obj.user_id = this.user.id
-          const response = await this.api.store(this.obj)
-          const { data } = response
-          await this.setObj(data)
+          const formData = this.formDialog.formData
+          formData.user_id = this.user.id
+          const response = await this.api.store(formData)
+          await this.updateFormDialog({
+            formData: response.data
+          })
           this.done()
         }
       })
     },
     async update() {
-      this.$refs['obj_form'].validate(async valid => {
+      this.$refs['data_form'].validate(async valid => {
         if (valid) {
-          this.obj.modified_user_id = this.user.id
-          const response = await this.api.update(this.obj.id, this.obj)
-          const { data } = response.data
-          await this.setObj(data)
+          const { formData } = this.formDialog
+          formData.modified_user_id = this.user.id
+          const response = await this.api.update(formData.id, formData)
+          await this.updateFormDialog({
+            formData: response.data
+          })
           this.done()
         }
       })
     },
     done() {
-      this.$emit('action-done', deepClone(this.obj))
+      const { formData, index } = this.formDialog
+      this.$emit('action-done', deepClone(formData), index)
       this.$notify({
         title: '成功',
         message: '操作成功',
@@ -61,6 +61,11 @@ export default {
         duration: 2000
       })
       this.close()
+    },
+    close() {
+      this.updateFormDialog({
+        visible: false
+      })
     }
   }
 }

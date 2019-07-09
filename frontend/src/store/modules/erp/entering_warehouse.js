@@ -1,38 +1,36 @@
 import { EnteringWarehouse } from '@/defines/models'
 
+const newDialog = function () {
+  return {
+    action: undefined,
+    formData: EnteringWarehouse(),
+    index: -1,
+    visible: false
+  }
+}
+
 const state = {
-  action: undefined,
-  obj: EnteringWarehouse(),
-  dialogVisible: false
+  formDialog: newDialog()
 }
 
 const mutations = {
-  SET_VISIBLE: (state, visible) => {
-    state.dialogVisible = visible
+  SET_FORM_DIALOG: (state, dialog_data) => {
+    state.formDialog = dialog_data
   },
-  SET_ACTION: (state, action) => {
-    state.action = action
-  },
-  SET_OBJ: (state, obj) => {
-    state.obj = obj
+  UPDATE_FORM_DIALOG: (state, dialog_data) => {
+    state.formDialog = Object.assign({}, state.formDialog, dialog_data)
   }
 }
 
 const actions = {
-  async close({ commit }) {
-    commit('SET_VISIBLE', false)
+  async resetFormDialog({ commit }) {
+    commit('SET_FORM_DIALOG', newDialog())
   },
-  async open({ commit }) {
-    commit('SET_VISIBLE', true)
+  async setFormDialog({ commit }, dialog_data) {
+    commit('SET_FORM_DIALOG', dialog_data)
   },
-  async doAction({ commit }, action) {
-    commit('SET_ACTION', action)
-  },
-  async resetObj({ commit }) {
-    commit('SET_OBJ', EnteringWarehouse())
-  },
-  async setObj({ commit }, obj) {
-    commit('SET_OBJ', obj)
+  async updateFormDialog({ commit }, dialog_data) {
+    commit('UPDATE_FORM_DIALOG', dialog_data)
   }
 }
 

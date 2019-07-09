@@ -42,7 +42,6 @@
     </div>
 
     <el-table
-      :key="tableKey"
       v-loading="listLoading"
       :data="tableData"
       border
@@ -65,7 +64,7 @@
 
       <el-table-column
         label="入库日期"
-        width="150px"
+        width="130px"
         align="center"
       >
         <template slot-scope="scope">
@@ -76,7 +75,7 @@
 
       <el-table-column
         label="产品"
-        min-width="150px"
+        min-width="130px"
       >
         <template slot-scope="{row}">
           <span
@@ -98,7 +97,7 @@
 
       <el-table-column
         label="规格"
-        width="110px"
+        width="80px"
         align="center"
       >
         <template slot-scope="scope">
@@ -108,7 +107,7 @@
 
       <el-table-column
         label="重量"
-        width="80px"
+        width="120px"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.weight">{{ scope.row.weight }}kg</span>
@@ -127,7 +126,7 @@
 
       <el-table-column
         label="生产日期"
-        width="150px"
+        width="130px"
         align="center"
       >
         <template slot-scope="{row}">
@@ -141,11 +140,11 @@
         width="230"
         class-name="small-padding fixed-width"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="scope">
           <el-button
             type="primary"
             size="mini"
-            @click="handleUpdate(row)"
+            @click="handleUpdate(scope)"
           >
             编辑
           </el-button>
@@ -153,7 +152,7 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(row)"
+            @click="handleDelete(scope)"
           >
             删除
           </el-button>
@@ -196,7 +195,6 @@ export default {
   data() {
     return {
       api: enteringWarehousesApi,
-      tableKey: 0,
       queryParams: {
         product_name: undefined,
         product_batch: undefined
@@ -205,21 +203,14 @@ export default {
   },
   computed: {
     ...mapState('erp/entering_warehouse', {
-      action: state => state.action,
-      obj: state => state.obj
+      formDialog: state => state.formDialog
     })
   },
   methods: {
     ...mapActions('erp/entering_warehouse', [
-      'doAction',
-      'resetObj',
-      'setObj'
-      // 'close'
+      'resetFormDialog',
+      'setFormDialog'
     ]),
-    handleFilter() {
-      this.queryParams.page = 1
-      this.fetchData()
-    },
     sortChange(data) {
       const { prop, order } = data
       if (prop === 'id') {
@@ -237,13 +228,20 @@ export default {
       this.fetchData()
     },
     handleCreate() {
-      this.setObj(EnteringWarehouse())
-      this.doAction('create')
-      this.$store.dispatch('erp/entering_warehouse/open')
+      this.setFormDialog({
+        action: 'create',
+        formData: EnteringWarehouse(),
+        index: -1,
+        visible: true
+      })
     },
-    handleUpdate(row) {
-      // 具体的实现
-      this.unimplemented()
+    handleUpdate(scope) {
+      this.setFormDialog({
+        action: 'update',
+        formData: scope.row,
+        index: scope.$index,
+        visible: true
+      })
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {

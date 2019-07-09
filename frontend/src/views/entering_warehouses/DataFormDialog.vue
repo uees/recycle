@@ -2,13 +2,13 @@
   <div class="data-form-dialog">
     <el-dialog
       :title="titleMap[action]"
-      :visible.sync="dialogVisible"
+      :visible="visible"
       @close="close"
     >
       <el-form
-        ref="obj_form"
-        :model="obj"
-        :rules="objRules"
+        ref="data_form"
+        :model="formData"
+        :rules="dataRules"
         label-position="left"
         label-width="70px"
         style="width: 400px; margin-left:50px;"
@@ -19,44 +19,46 @@
           label="产品"
           prop="product_name"
         >
-          <el-input v-model="obj.product_name" />
+          <el-input v-model="formData.product_name" />
         </el-form-item>
 
         <el-form-item
           label="批号"
           prop="product_batch"
         >
-          <el-input v-model="obj.product_batch" />
+          <el-input v-model="formData.product_batch" />
         </el-form-item>
 
         <el-form-item
           label="规格"
           prop="spec"
         >
-          <el-input v-model="obj.spec" />
+          <el-input v-model="formData.spec" />
         </el-form-item>
 
         <el-form-item
           label="重量"
           prop="weight"
         >
-          <el-input v-model="obj.weight" />
+          <el-input v-model="formData.weight" />
         </el-form-item>
 
         <el-form-item label="生产日期">
           <el-date-picker
-            v-model="obj.made_at"
+            v-model="formData.made_at"
             align="right"
             type="date"
+            value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="选择日期"
           />
         </el-form-item>
 
         <el-form-item label="入库日期">
           <el-date-picker
-            v-model="obj.entered_at"
+            v-model="formData.entered_at"
             align="right"
             type="date"
+            value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="选择日期"
             :picker-options="pickerOptions"
           />
@@ -82,21 +84,6 @@ import { mapState, mapActions } from 'vuex'
 import DataFormDialog from '../mixins/DataFormDialog'
 import { enteringWarehousesApi } from '@/api/erp'
 
-export function newObj() {
-  return {
-    id: 0,
-    product_name: '',
-    product_batch: '',
-    spec: '',
-    weight: null,
-    amount: null,
-    entered_at: null,
-    made_at: null,
-    created_at: null,
-    updated_at: null
-  }
-}
-
 export default {
   name: 'DataForm',
   mixins: [
@@ -105,7 +92,7 @@ export default {
   data() {
     return {
       api: enteringWarehousesApi,
-      objRules: {
+      dataRules: {
         product_name: { required: true, message: '必填项', trigger: 'blur' },
         product_batch: { required: true, message: '必填项', trigger: 'blur' },
         weight: { required: true, message: '必填项', trigger: 'blur' }
@@ -139,17 +126,21 @@ export default {
   },
   computed: {
     ...mapState('erp/entering_warehouse', {
-      action: state => state.action,
-      obj: state => state.obj,
-      dialogVisible: state => state.dialogVisible
-    })
+      formDialog: state => state.formDialog
+    }),
+    action() {
+      return this.formDialog.action
+    },
+    formData() {
+      return this.formDialog.formData
+    },
+    visible() {
+      return this.formDialog.visible
+    }
   },
   methods: {
     ...mapActions('erp/entering_warehouse', [
-      'doAction',
-      'resetObj',
-      'setObj',
-      'close'
+      'updateFormDialog'
     ])
   }
 }
