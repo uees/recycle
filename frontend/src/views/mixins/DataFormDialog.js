@@ -43,9 +43,9 @@ export default {
         if (valid) {
           const { formData } = this.formDialog
           formData.modified_user_id = this.user.id
-          const response = await this.api.update(formData.id, formData)
+          const { data } = await this.api.update(formData.id, formData)
           await this.updateFormDialog({
-            formData: response.data
+            formData: data
           })
           this.done()
         }

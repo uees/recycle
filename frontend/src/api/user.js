@@ -39,3 +39,7 @@ export function changeProfile(data) {
 export const usersApi = new RestApi({
   url: '/users'
 })
+
+export const rolesApi = new RestApi({
+  url: '/roles'
+})

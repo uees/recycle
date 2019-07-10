@@ -12,6 +12,18 @@ class RecycledThing extends Model
         'amount',
         'confirmed_amount',
         'recycled_user',
+        'type',
+    ];
+
+    /**
+     * 应被转换为日期的属性。
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'confirmed_at',
     ];
 
     /**

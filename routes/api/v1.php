@@ -57,6 +57,13 @@ $api->version('v1', [
             'uses' => 'UserController@password',
         ]);
 
+        // 角色 api
+        $api->get('roles', 'RoleController@index');
+        $api->post('roles', 'RoleController@store');
+        $api->get('roles/{id}', 'RoleController@show');
+        $api->patch('roles/{id}', 'RoleController@update');
+        $api->delete('roles/{id}','RoleController@destroy');
+
         // 入库 api
         $api->get('entering-warehouses', [
             'as' => 'entering_warehouses.index',

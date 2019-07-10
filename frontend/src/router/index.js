@@ -100,20 +100,20 @@ export const constantRoutes = [
     children: [
       {
         path: 'members',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Member',
+        component: () => import('@/views/members/index'), // Parent router-view
+        name: 'Members',
         meta: { title: '用户管理' },
         children: [
           {
             path: 'users',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'User',
+            component: () => import('@/views/members/Users'),
+            name: 'Users',
             meta: { title: '用户' }
           },
           {
             path: 'roles',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Role',
+            component: () => import('@/views/members/Roles'),
+            name: 'Roles',
             meta: { title: '角色' }
           }
         ]
@@ -121,7 +121,7 @@ export const constantRoutes = [
       {
         path: 'customers',
         component: () => import('@/views/customers/index'),
-        name: 'Customer',
+        name: 'Customers',
         meta: { title: '客户' }
       }
     ]
