@@ -9,6 +9,11 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <error-log
+        v-if="device!=='mobile'"
+        class="errLog-container right-menu-item hover-effect"
+      />
+
       <el-dropdown
         class="avatar-container"
         trigger="click"
@@ -31,13 +36,7 @@
           </router-link>
           <a
             target="_blank"
-            href="https://github.com/PanJiaChen/vue-admin-template/"
-          >
-            <el-dropdown-item>Github</el-dropdown-item>
-          </a>
-          <a
-            target="_blank"
-            href="https://panjiachen.github.io/vue-element-admin-site/#/"
+            href="https://panjiachen.gitee.io/vue-element-admin-site/zh/"
           >
             <el-dropdown-item>Docs</el-dropdown-item>
           </a>
@@ -57,16 +56,19 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import ErrorLog from '@/components/ErrorLog'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    ErrorLog
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'user'
+      'user',
+      'device'
     ])
   },
   methods: {
@@ -104,6 +106,11 @@ export default {
 
   .breadcrumb-container {
     float: left;
+  }
+
+  .errLog-container {
+    display: inline-block;
+    vertical-align: top;
   }
 
   .right-menu {

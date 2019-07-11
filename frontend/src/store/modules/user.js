@@ -63,6 +63,8 @@ const actions = {
     commit('SET_NAME', name)
     commit('SET_EMAIL', email)
     commit('SET_AVATAR', avatar)
+
+    return data
   },
 
   // user logout

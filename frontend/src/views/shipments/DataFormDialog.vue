@@ -24,10 +24,9 @@
             clearable
             allow-create
             remote
-            reserve-keyword
             default-first-option
             placeholder="请输入关键词"
-            :remote-method="apiSearchCustomers"
+            :remote-method="loadCustomers"
             :loading="customers.loading"
           >
             <el-option
@@ -98,7 +97,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import DataFormDialog from '../mixins/DataFormDialog'
-import { shipmentsApi, customersApi } from '@/api/erp'
+import { shipmentsApi } from '@/api/erp'
 
 export default {
   name: 'DataForm',
@@ -113,10 +112,6 @@ export default {
         product_name: { required: true, message: '必填项', trigger: 'blur' },
         product_batch: { required: true, message: '必填项', trigger: 'blur' },
         weight: { required: true, message: '必填项', trigger: 'blur' }
-      },
-      customers: {
-        list: [],
-        loading: false
       }
     }
   },
@@ -124,6 +119,9 @@ export default {
     ...mapState('erp/shipment', {
       formDialog: state => state.formDialog
     }),
+    ...mapState('erp/basedata', [
+      'customers'
+    ]),
     action() {
       return this.formDialog.action
     },
@@ -134,29 +132,22 @@ export default {
       return this.formDialog.visible
     },
     customerOptions() {
-      if (this.customers.list.length === 0 && this.formData.customer) {
+      if (this.customers.data.length === 0 && this.formData.customer) {
         // 以免编辑时只显示数字
         const customer = this.formData.customer.data
-        return this.customers.list.concat([customer])
+        return this.customers.data.concat([customer])
       }
 
-      return this.customers.list
+      return this.customers.data
     }
   },
   methods: {
     ...mapActions('erp/shipment', [
       'updateFormDialog'
     ]),
-    async apiSearchCustomers(query) {
-      if (query !== '') {
-        this.customers.loading = true
-        const res = await customersApi.list({ params: { q: query }})
-        this.customers.loading = false
-        this.customers.list = res.data
-      } else {
-        this.customers.list = []
-      }
-    }
+    ...mapActions('erp/basedata', [
+      'loadCustomers'
+    ])
   }
 }
 </script>

@@ -3,33 +3,57 @@ import { customersApi } from '@/api/erp'
 
 // 用于提示建议的数据
 const state = {
-  allRoles: [],
-  customers: []
+  roles: {
+    data: [],
+    loading: false
+  },
+  customers: {
+    data: [],
+    loading: false
+  }
 }
 
 const mutations = {
-  SET_ROLES: (state, roles) => {
-    state.allRoles = roles
+  SET_ROLES_DATA: (state, roles) => {
+    state.roles.data = roles
   },
-  SET_CUSTOMERS: (state, customers) => {
-    state.customers = customers
+  SET_ROLES_LOADING: (state, loading) => {
+    state.roles.loading = loading
+  },
+  SET_CUSTOMERS_DATA: (state, customers) => {
+    state.customers.data = customers
+  },
+  SET_CUSTOMERS_LOADING: (state, loading) => {
+    state.roles.loading = loading
   }
 }
 
 const actions = {
   async loadRoles({ commit }) {
-    const response = await rolesApi.list({
+    commit('SET_ROLES_LOADING', true)
+    const { data } = await rolesApi.list({
       params: {
         all: true
       }
     })
-    const { data } = response
-    commit('SET_ROLES', data)
+    commit('SET_ROLES_DATA', data)
+    commit('SET_ROLES_LOADING', false)
+
+    return data
   },
-  async loadCustomers({ commit }) {
-    const response = await customersApi.list()
-    const { data } = response
-    commit('SET_CUSTOMERS', data)
+  async loadCustomers({ commit }, query) {
+    if (query !== '') {
+      commit('SET_CUSTOMERS_LOADING', true)
+      const { data } = await customersApi.list({
+        params: { q: query }
+      })
+      commit('SET_CUSTOMERS_DATA', data)
+      commit('SET_CUSTOMERS_LOADING', false)
+
+      return data
+    } else {
+      return []
+    }
   }
 }
 

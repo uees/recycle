@@ -44,6 +44,12 @@ export const constantRoutes = [
   },
 
   {
+    path: '/401',
+    component: () => import('@/views/401'),
+    hidden: true
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -83,11 +89,17 @@ export const constantRoutes = [
     children: [{
       path: 'index',
       name: 'RecycledThings',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/recycled_things/index'),
       meta: { title: '回收管理', icon: 'table' }
     }]
-  },
+  }
+]
 
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
   {
     path: '/basedata',
     component: Layout,
@@ -95,14 +107,15 @@ export const constantRoutes = [
     name: 'Basedata',
     meta: {
       title: '系统设置',
-      icon: 'nested'
+      icon: 'nested',
+      roles: ['admin', 'finished_warehouse_keeper']
     },
     children: [
       {
         path: 'members',
         component: () => import('@/views/members/index'), // Parent router-view
         name: 'Members',
-        meta: { title: '用户管理' },
+        meta: { title: '用户管理', roles: ['admin'] },
         children: [
           {
             path: 'users',
@@ -122,7 +135,7 @@ export const constantRoutes = [
         path: 'customers',
         component: () => import('@/views/customers/index'),
         name: 'Customers',
-        meta: { title: '客户' }
+        meta: { title: '客户', roles: ['admin', 'finished_warehouse_keeper'] }
       }
     ]
   },
