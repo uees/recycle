@@ -15,7 +15,10 @@ class RecycledStatisticsController extends Controller
     public function index(Request $request)
     {
         $query = RecycledStatistics::query();
-        $this->parseWhere($query, ['year', 'month', 'recyclable_type']);
+        if (!$request->filled('customer_id')) {
+            $query->whereNull('customer_id');
+        }
+        $this->parseWhere($query, ['year', 'month', 'recyclable_type', 'customer_id']);
         $query->orderBy($this->getSortBy(), $this->getOrder());
         $results = $query->get();
 
@@ -31,6 +34,8 @@ class RecycledStatisticsController extends Controller
 
         $year = (int)$request->get('year');
         $month = (int)$request->get('month');
+
+        // todo customer make
 
         $recyclable_types = ['bucket', 'box'];
         $entering_warehouse_amount = [];

@@ -39,11 +39,19 @@ class UserTransformer extends TransformerAbstract
 
     public function includeAuthorization(User $user)
     {
+        if (!$this->authorization) {
+            return $this->null();
+        }
+
         return $this->item($this->authorization, new AuthorizationTransformer());
     }
 
     public function includeRoles(User $user)
     {
+        if (!$user->roles()->exists()) {
+            return $this->null();
+        }
+
         return $this->collection($user->roles, app(RoleTransformer::class));
     }
 }

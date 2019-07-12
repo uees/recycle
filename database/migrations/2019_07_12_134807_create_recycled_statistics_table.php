@@ -15,6 +15,7 @@ class CreateRecycledStatisticsTable extends Migration
     {
         Schema::create('recycled_statistics', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('customer_id')->nullable();
             $table->enum('recyclable_type', ['bucket', 'box'])->nullable();
             $table->unsignedSmallInteger('year');
             $table->unsignedSmallInteger('month');

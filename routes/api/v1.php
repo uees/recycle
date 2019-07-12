@@ -114,5 +114,9 @@ $api->version('v1', [
         $api->get('customers/{id}', 'CustomerController@show');
         $api->patch('customers/{id}', 'CustomerController@update');
         $api->delete('customers/{id}','CustomerController@destroy');
+
+        // 统计
+        $api->get('recycled-statistics', 'RecycledStatisticsController@index');
+        $api->post('recycled-statistics', 'RecycledStatisticsController@create');
     });
 });
