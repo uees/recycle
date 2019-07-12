@@ -92,7 +92,9 @@
               size="small"
             />
           </el-tooltip>
-          <span v-else>{{ scope.row.created_at }}</span>
+          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+            <span>{{ scope.row.created_at }}</span>
+          </el-link>
         </template>
       </el-table-column>
 
@@ -101,10 +103,10 @@
         align="center"
         min-width="160px"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="scope">
           <el-select
-            v-if="row._is_recycle"
-            v-model="row.customer_id"
+            v-if="scope.row._is_recycle"
+            v-model="scope.row.customer_id"
             filterable
             remote
             default-first-option
@@ -122,8 +124,10 @@
             />
           </el-select>
           <template v-else>
-            <span v-if="row.customer">{{ row.customer.data.name }}</span>
-            <span v-else>{{ row.customer_id }}</span>
+            <el-link type="primary" @click="handleEditRecycled(scope)">
+              <span v-if="scope.row.customer && scope.row.customer.data">{{ scope.row.customer.data.name }}</span>
+              <span v-else>{{ scope.row.customer_id }}</span>
+            </el-link>
           </template>
         </template>
       </el-table-column>
@@ -146,7 +150,9 @@
                        :value="item.value"
             />
           </el-select>
-          <span v-else>{{ scope.row.recyclable_type }}</span>
+          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+            <span>{{ scope.row.recyclable_type | recyclableType }}</span>
+          </el-link>
         </template>
       </el-table-column>
 
@@ -162,7 +168,9 @@
             class="edit-input"
             size="small"
           />
-          <span v-else>{{ scope.row.amount }}</span>
+          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+            <span>{{ scope.row.amount }}</span>
+          </el-link>
         </template>
       </el-table-column>
 
@@ -178,7 +186,9 @@
             class="edit-input"
             size="small"
           />
-          <span v-else>{{ scope.row.recycled_user }}</span>
+          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+            <span>{{ scope.row.recycled_user }}</span>
+          </el-link>
         </template>
       </el-table-column>
 
@@ -212,7 +222,9 @@
         align="center"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.confirmed_user">{{ scope.row.confirmed_user.data.name }}</span>
+          <span v-if="scope.row.confirmed_user && scope.row.confirmed_user.data">
+            {{ scope.row.confirmed_user.data.name }}
+          </span>
           <span v-else>{{ scope.row.confirmed_user_id }}</span>
         </template>
       </el-table-column>
@@ -234,6 +246,7 @@
       >
         <template slot-scope="scope">
           <el-tooltip
+            v-if="scope.row.id"
             class="item"
             effect="dark"
             content="点击显示检测窗口"
@@ -242,10 +255,12 @@
             <el-link
               type="primary"
               @click="handleQC(scope)"
-            > <span v-if="scope.row.qc_records && scope.row.qc_records.data.length > 0">
+            >
+              <span v-if="scope.row.qc_records && scope.row.qc_records.data">
                 {{ scope.row.qc_records.data | count_bad }}
               </span>
-              <span v-else>0</span></el-link>
+              <span v-else>0</span>
+            </el-link>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -271,12 +286,6 @@
             >Cancel</el-button>
           </template>
           <template v-else>
-            <el-button
-              type="primary"
-              size="small"
-              icon="el-icon-edit"
-              @click="handleUpdate(scope)"
-            >Edit</el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -320,9 +329,20 @@ export default {
   name: 'RecycledThings',
   filters: {
     count_bad(records) {
-      return records.reduce((total, record) => {
-        return total + record.bad_amount
-      }, 0)
+      let amount=0
+      for (const record of records) {
+        amount += +record.bad_amount
+      }
+      return amount
+    },
+    recyclableType(data) {
+      const el = RECYCLABLE_TYPES.find(el => {
+        if (el.value === data) {
+          return true
+        }
+      })
+
+      return el.label
     }
   },
   components: {
@@ -441,7 +461,16 @@ export default {
       row._is_create = true
       this.tableData.unshift(row)
     },
-    handleUpdateRecycled(scope) {
+    handleEditRecycled(scope) {
+      if (scope.row.customer && scope.row.customer.data) {
+        const hasCustomer = this.customers.data.some(customer => {
+          return customer.id === scope.row.customer.data.id
+        })
+        if (!hasCustomer) {
+          this.customers.data.push(scope.row.customer.data)
+        }
+      }
+
       scope.row._is_recycle = true
     },
     handleConfirm(scope) {

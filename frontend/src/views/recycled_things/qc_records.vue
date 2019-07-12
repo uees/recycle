@@ -56,7 +56,7 @@
                          :value="item.value"
               />
             </el-select>
-            <span v-else>{{ scope.row.type }}</span>
+            <span v-else>{{ scope.row.type | qc_type }}</span>
           </template>
         </el-table-column>
 
@@ -117,6 +117,15 @@ import InlineCrud from '../mixins/InlineCrud'
 
 export default {
   name: 'QcRecords',
+  filters: {
+    qc_type(val) {
+      const el = QC_TYPES.find(el => {
+        return el.value === val
+      })
+
+      return el.label
+    }
+  },
   mixins: [
     InlineCrud
   ],
@@ -138,11 +147,27 @@ export default {
     })
   },
   watch: {
-    recycled_thing(val) {
-      this.queryParams.recycled_thing_id = this.recycled_thing.id
-    }
+    visible(val) {
+      if (val) {
+        this.queryParams.recycled_thing_id = this.recycled_thing.id
+        this.fetchData()
+      }
+    },
   },
   methods: {
+    async fetchData() {
+      if (this.visible) {  // 可见时才 fetchData
+        this.listLoading = true
+        const response = await this.api.list({ params: this.queryParams })
+        this.tableData = response.data.map(value => {
+          this.$set(value, '_is_edit', false)
+          this.setOriginal(value)
+          return value
+        })
+        this.paginate(response)
+        this.listLoading = false
+      }
+    },
     newObj() {
       const obj = QcRecord()
       obj.recycled_thing_id = this.recycled_thing.id
