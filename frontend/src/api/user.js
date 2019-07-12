@@ -15,7 +15,7 @@ export function logout() {
 }
 
 export function refreshToken() {
-  return request.put('auth/refresh')
+  return request.put('/auth/refresh')
 }
 
 export function getInfo() {
@@ -29,11 +29,11 @@ export function getInfo() {
 }
 
 export function changePassword(data) {
-  return request.put('user/password', data)
+  return request.put('/user/password', data)
 }
 
 export function changeProfile(data) {
-  return request.patch('user', data)
+  return request.patch('/user', data)
 }
 
 export const usersApi = new RestApi({

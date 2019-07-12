@@ -57,22 +57,29 @@ class ShipmentController extends Controller
 
         // 不是数字或数字字符串，则是新客户名称
         if (!is_numeric($customer)) {
-            $customer = Customer::firstOrCreate([
-                'name' => $customer
-            ]);
+            $customer = Customer::firstOrCreate(['name' => $customer]);
         } else {
-            $customer = Customer::where('id', $customer)
-                ->firstOrFail();
+            $customer = Customer::where('id', $customer)->firstOrFail();
         }
 
         $shipment = new Shipment();
         $shipment->fill($request->all());
+
         // created_at 设计的作用是发货日期, 是可填充的
         if ($created_at = $request->get('created_at')) {
             $shipment->created_at = $created_at;
         }
+
+        // 设置可回收类别
+        if (in_array($shipment->spec, array_keys(_RECYCLABLE_TYPE_SPECS))) {
+            if (!$shipment->recyclable_type) {
+                $shipment->recyclable_type = _RECYCLABLE_TYPE_SPECS[$shipment->spec];
+            }
+        }
+
         $shipment->customer()->associate($customer);
         $shipment->created_user()->associate($this->user());
+
         $shipment->save();
 
         $this->loadRelByModel($shipment);
@@ -93,20 +100,27 @@ class ShipmentController extends Controller
 
         // 不是数字或数字字符串，则是新客户名称
         if (!is_numeric($customer)) {
-            $customer = Customer::firstOrCreate([
-                'name' => $customer
-            ]);
+            $customer = Customer::firstOrCreate(['name' => $customer]);
         } else {
-            $customer = Customer::where('id', $customer)
-                ->firstOrFail();
+            $customer = Customer::whereId( $customer)->firstOrFail();
         }
 
         $shipment->fill($request->all());
+
         // created_at 设计的作用是发货日期, 是可填充的
         if ($created_at = $request->get('created_at')) {
             $shipment->created_at = $created_at;
         }
+
+        // 设置可回收类别
+        if (in_array($shipment->spec, array_keys(_RECYCLABLE_TYPE_SPECS))) {
+            if (!$shipment->recyclable_type) {
+                $shipment->recyclable_type = _RECYCLABLE_TYPE_SPECS[$shipment->spec];
+            }
+        }
+
         $shipment->customer()->associate($customer);
+
         $shipment->save();
 
         $this->loadRelByModel($shipment);

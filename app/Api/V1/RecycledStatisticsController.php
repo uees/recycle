@@ -34,10 +34,74 @@ class RecycledStatisticsController extends Controller
 
         $year = (int)$request->get('year');
         $month = (int)$request->get('month');
+        $customer_id = $request->get('customer_id');
+        $recyclable_type = $request->get('recyclable_type');
+        $recyclable_types = $recyclable_type ? [$recyclable_type] : ['bucket', 'box'];
 
-        // todo customer make
+        if (!$customer_id) {
+            $collection = $this->makeTotal($recyclable_types, $year, $month);
+        } else {
+            $collection = $this->makeByCustomer($customer_id, $recyclable_types, $year, $month);
+        }
 
-        $recyclable_types = ['bucket', 'box'];
+        return $this->response->collection($collection, new RecycledStatisticsTransformer);
+    }
+
+    protected function makeByCustomer($customer_id, $recyclable_types, $year, $month)
+    {
+        $shipment_amount = [];
+        $recycled_amount = [];
+        $bad_amount = [];
+        $good_amount = [];
+
+        $collection = collect();
+
+        foreach ($recyclable_types as $type) {
+            $shipment_amount[$type] = Shipment::query()
+                ->where('recyclable_type', $type)
+                ->where('customer_id', $customer_id)
+                ->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->sum('amount');
+
+            $recycled_amount[$type] = RecycledThing::query()
+                ->where('recyclable_type', $type)
+                ->where('customer_id', $customer_id)
+                ->whereYear('confirmed_at', $year)
+                ->whereMonth('confirmed_at', $month)
+                ->sum('confirmed_amount');
+
+            $bad_amount[$type] = QcRecord::whereHas('recycled_thing', function ($query) use ($type, $customer_id) {
+                $query->where('recyclable_type', $type)
+                    ->where('customer_id', $customer_id);
+            })
+                ->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->sum('bad_amount');
+
+            $good_amount[$type] = $recycled_amount[$type] - $bad_amount[$type];
+
+            $statistics = RecycledStatistics::query()->updateOrCreate([
+                'recyclable_type' => $type,
+                'customer_id' => $customer_id,
+                'year' => $year,
+                'month' => $month,
+            ], [
+                    'shipment_amount' => $shipment_amount[$type],
+                    'recycled_amount' => $recycled_amount[$type],
+                    'bad_amount' => $bad_amount[$type] ,
+                    'good_amount' => $good_amount[$type],
+                ]
+            );
+
+            $collection->push($statistics);
+        }
+
+        return $collection;
+    }
+
+    protected function makeTotal($recyclable_types, $year, $month)
+    {
         $entering_warehouse_amount = [];
         $shipment_amount = [];
         $recycled_amount = [];
@@ -74,10 +138,11 @@ class RecycledStatisticsController extends Controller
             $good_amount[$type] = $recycled_amount[$type] - $bad_amount[$type];
 
             $statistics = RecycledStatistics::query()->updateOrCreate([
-                    'recyclable_type' => $type,
-                    'year' => $year,
-                    'month' => $month,
-                ], [
+                'recyclable_type' => $type,
+                'customer_id' => NULL,
+                'year' => $year,
+                'month' => $month,
+            ], [
                     'entering_warehouse_amount' => $entering_warehouse_amount[$type],
                     'shipment_amount' => $shipment_amount[$type],
                     'recycled_amount' => $recycled_amount[$type],
@@ -89,6 +154,6 @@ class RecycledStatisticsController extends Controller
             $collection->push($statistics);
         }
 
-        return $this->response->collection($collection, new RecycledStatisticsTransformer);
+        return $collection;
     }
 }

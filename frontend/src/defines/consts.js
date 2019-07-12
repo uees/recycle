@@ -1,6 +1,6 @@
 export const specs = [
   { key: 'g_1kg', display_name: '1kg/罐' },
-  { key: 'g_4kg', display_name: '1kg/罐' },
+  { key: 'g_4kg', display_name: '4kg/罐' },
   { key: 'g_5kg', display_name: '5kg/罐' },
   { key: 'g_20kg', display_name: '20kg/桶' },
   { key: 'x_10kg', display_name: '10kg/箱' },
@@ -16,11 +16,11 @@ export const specsKeyValue = specs.reduce((acc, cur) => {
 }, {})
 
 export const RECYCLABLE_TYPES = [
-  {value: 'bucket', label: '桶'},
-  {value: 'box', label: '纸箱'}
+  { value: 'bucket', label: '桶' },
+  { value: 'box', label: '纸箱' }
 ]
 
 export const QC_TYPES = [
-  {value: 'IQC', label: 'IQC'},
-  {value: 'SC', label: '生产部'}
+  { value: 'IQC', label: 'IQC' },
+  { value: 'SC', label: '生产部' }
 ]

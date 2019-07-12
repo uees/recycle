@@ -56,7 +56,18 @@
           label="规格"
           prop="spec"
         >
-          <el-input v-model="formData.spec" />
+          <el-select
+            v-model="formData.spec"
+            placeholder="规格"
+            prop="spec"
+          >
+            <el-option
+              v-for="item in specs"
+              :key="item.key"
+              :label="item.display_name"
+              :value="item.key"
+            />
+          </el-select>
         </el-form-item>
 
         <el-form-item
@@ -70,13 +81,20 @@
           label="发货日期"
           prop="made_at"
         >
-          <el-date-picker
-            v-model="formData.created_at"
-            align="right"
-            type="date"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择日期"
-          />
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="留空表示当前日期"
+            placement="top"
+          >
+            <el-date-picker
+              v-model="formData.created_at"
+              align="right"
+              type="date"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="选择日期"
+            />
+          </el-tooltip>
         </el-form-item>
       </el-form>
 
@@ -96,8 +114,9 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import DataFormDialog from '../mixins/DataFormDialog'
 import { shipmentsApi } from '@/api/erp'
+import { specs } from '@/defines/consts'
+import DataFormDialog from '../mixins/DataFormDialog'
 
 export default {
   name: 'DataForm',
@@ -107,11 +126,13 @@ export default {
   data() {
     return {
       api: shipmentsApi,
+      specs: specs,
       dataRules: {
         customer_id: { required: true, message: '必填项', trigger: 'blur' },
         product_name: { required: true, message: '必填项', trigger: 'blur' },
         product_batch: { required: true, message: '必填项', trigger: 'blur' },
-        weight: { required: true, message: '必填项', trigger: 'blur' }
+        weight: { required: true, message: '必填项', trigger: 'blur' },
+        spec: { required: true, message: '必填项', trigger: 'blur' }
       }
     }
   },

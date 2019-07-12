@@ -23,13 +23,21 @@ export const recyclesApi = new RestApi({
 })
 
 export function recycle(data, config) {
-  return request.post('recycles/recycle', data, config)
+  return request.post('/recycles/recycle', data, config)
 }
 
 export function updateRecycled(id, data, config) {
-  return request.patch(`recycles/recycle/${id}`, data, config)
+  return request.patch(`/recycles/recycle/${id}`, data, config)
 }
 
 export function confirm(id, data, config) {
-  return request.patch(`recycles/confirm/${id}`, data, config)
+  return request.patch(`/recycles/confirm/${id}`, data, config)
+}
+
+export function getRecycledStatistics(params) {
+  return request.get('/recycled-statistics', { params })
+}
+
+export function makeRecycledStatistics(data, config) {
+  return request.post('/recycled-statistics', data, config)
 }

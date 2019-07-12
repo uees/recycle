@@ -92,7 +92,11 @@
               size="small"
             />
           </el-tooltip>
-          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+          <el-link
+            v-else
+            type="primary"
+            @click="handleEditRecycled(scope)"
+          >
             <span>{{ scope.row.created_at }}</span>
           </el-link>
         </template>
@@ -124,7 +128,10 @@
             />
           </el-select>
           <template v-else>
-            <el-link type="primary" @click="handleEditRecycled(scope)">
+            <el-link
+              type="primary"
+              @click="handleEditRecycled(scope)"
+            >
               <span v-if="scope.row.customer && scope.row.customer.data">{{ scope.row.customer.data.name }}</span>
               <span v-else>{{ scope.row.customer_id }}</span>
             </el-link>
@@ -144,13 +151,18 @@
             class="edit-input"
             size="small"
           >
-            <el-option v-for="item in recyclable_types"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value"
+            <el-option
+              v-for="item in recyclable_types"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
             />
           </el-select>
-          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+          <el-link
+            v-else
+            type="primary"
+            @click="handleEditRecycled(scope)"
+          >
             <span>{{ scope.row.recyclable_type | recyclableType }}</span>
           </el-link>
         </template>
@@ -168,7 +180,11 @@
             class="edit-input"
             size="small"
           />
-          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+          <el-link
+            v-else
+            type="primary"
+            @click="handleEditRecycled(scope)"
+          >
             <span>{{ scope.row.amount }}</span>
           </el-link>
         </template>
@@ -186,7 +202,11 @@
             class="edit-input"
             size="small"
           />
-          <el-link v-else type="primary" @click="handleEditRecycled(scope)">
+          <el-link
+            v-else
+            type="primary"
+            @click="handleEditRecycled(scope)"
+          >
             <span>{{ scope.row.recycled_user }}</span>
           </el-link>
         </template>
@@ -329,7 +349,7 @@ export default {
   name: 'RecycledThings',
   filters: {
     count_bad(records) {
-      let amount=0
+      let amount = 0
       for (const record of records) {
         amount += +record.bad_amount
       }

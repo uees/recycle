@@ -33,7 +33,18 @@
           label="规格"
           prop="spec"
         >
-          <el-input v-model="formData.spec" />
+          <el-select
+            v-model="formData.spec"
+            placeholder="规格"
+            prop="spec"
+          >
+            <el-option
+              v-for="item in specs"
+              :key="item.key"
+              :label="item.display_name"
+              :value="item.key"
+            />
+          </el-select>
         </el-form-item>
 
         <el-form-item
@@ -84,8 +95,9 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import DataFormDialog from '../mixins/DataFormDialog'
 import { enteringWarehousesApi } from '@/api/erp'
+import { specs } from '@/defines/consts'
+import DataFormDialog from '../mixins/DataFormDialog'
 
 export default {
   name: 'DataForm',
@@ -95,10 +107,12 @@ export default {
   data() {
     return {
       api: enteringWarehousesApi,
+      specs: specs,
       dataRules: {
         product_name: { required: true, message: '必填项', trigger: 'blur' },
         product_batch: { required: true, message: '必填项', trigger: 'blur' },
         weight: { required: true, message: '必填项', trigger: 'blur' },
+        spec: { required: true, message: '必填项', trigger: 'blur' },
         made_at: { required: true, message: '必填项', trigger: 'blur' }
       },
       pickerOptions: {

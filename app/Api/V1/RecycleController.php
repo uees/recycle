@@ -50,31 +50,33 @@ class RecycleController extends Controller
         $this->authorize('recycle', RecycledThing::class);
 
         $this->validate($request, [
-            'customer_id' => 'bail|required',
             'amount' => 'bail|required|numeric',
-			'recyclable_type' => 'required',
+            'recyclable_type' => 'required',
             'recycled_user' => 'nullable|max:64',
         ]);
 
         $customer = $request->get('customer_id');
-
-        // 不是数字或数字字符串，则是新客户名称
-        if (!is_numeric($customer)) {
-            $customer = Customer::firstOrCreate([
-                'name' => $customer
-            ]);
-        } else {
-            $customer = Customer::where('id', $customer)
-                ->firstOrFail();
+        if ($customer) {
+            // 不是数字或数字字符串，则是新客户名称
+            if (!is_numeric($customer)) {
+                $customer = Customer::firstOrCreate(['name' => $customer]);
+            } else {
+                $customer = Customer::whereId($customer)->firstOrFail();
+            }
         }
 
         $recycled = new RecycledThing();
         $recycled->fill($request->only(['amount', 'recycled_user', 'recyclable_type']));
+
         // created_at 设计的作用是回收日期, 是可填充的
         if ($created_at = $request->get('created_at')) {
             $recycled->created_at = $created_at;
         }
-        $recycled->customer()->associate($customer);
+
+        if ($customer) {
+            $recycled->customer()->associate($customer);
+        }
+
         $recycled->save();
 
         $this->loadRelByModel($recycled);
@@ -88,22 +90,19 @@ class RecycleController extends Controller
     public function updateRecycled(Request $request, $id)
     {
         $this->validate($request, [
-            'customer_id' => 'bail|required',
             'amount' => 'bail|required|numeric',
-			'recyclable_type' => 'required',
+            'recyclable_type' => 'required',
             'recycled_user' => 'bail|required|max:64',
         ]);
 
         $customer = $request->get('customer_id');
-
-        // 不是数字或数字字符串，则是新客户名称
-        if (!is_numeric($customer)) {
-            $customer = Customer::firstOrCreate([
-                'name' => $customer
-            ]);
-        } else {
-            $customer = Customer::where('id', $customer)
-                ->firstOrFail();
+        if ($customer) {
+            // 不是数字或数字字符串，则是新客户名称
+            if (!is_numeric($customer)) {
+                $customer = Customer::firstOrCreate(['name' => $customer]);
+            } else {
+                $customer = Customer::whereId($customer)->firstOrFail();
+            }
         }
 
         $recycled = RecycledThing::whereId($id)->firstOrFail();
@@ -111,11 +110,16 @@ class RecycleController extends Controller
         $this->authorize('update', $recycled);
 
         $recycled->fill($request->only(['amount', 'recycled_user', 'recyclable_type']));
+
         // created_at 设计的作用是回收日期, 是可填充的
         if ($created_at = $request->get('created_at')) {
             $recycled->created_at = $created_at;
         }
-        $recycled->customer()->associate($customer);
+
+        if ($customer) {
+            $recycled->customer()->associate($customer);
+        }
+
         $recycled->save();
 
         $this->loadRelByModel($recycled);

@@ -50,10 +50,11 @@
               class="edit-input"
               size="small"
             >
-              <el-option v-for="item in qc_types"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value"
+              <el-option
+                v-for="item in qc_types"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               />
             </el-select>
             <span v-else>{{ scope.row.type | qc_type }}</span>
@@ -152,11 +153,11 @@ export default {
         this.queryParams.recycled_thing_id = this.recycled_thing.id
         this.fetchData()
       }
-    },
+    }
   },
   methods: {
     async fetchData() {
-      if (this.visible) {  // 可见时才 fetchData
+      if (this.visible) { // 可见时才 fetchData
         this.listLoading = true
         const response = await this.api.list({ params: this.queryParams })
         this.tableData = response.data.map(value => {
