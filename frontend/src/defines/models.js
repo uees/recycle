@@ -1,9 +1,10 @@
 export function EnteringWarehouse() {
   return {
     id: undefined,
-    product_name: '',
-    product_batch: '',
-    spec: '',
+    recyclable_type: undefined,
+    product_name: undefined,
+    product_batch: undefined,
+    spec: undefined,
     weight: undefined,
     amount: undefined,
     entered_at: undefined,
@@ -16,10 +17,11 @@ export function EnteringWarehouse() {
 export function Shipment() {
   return {
     id: undefined,
+    recyclable_type: undefined,
     customer_id: undefined,
     created_user_id: undefined,
-    product_name: '',
-    product_batch: '',
+    product_name: undefined,
+    product_batch: undefined,
     weight: undefined,
     amount: undefined,
     created_at: undefined,
@@ -30,11 +32,12 @@ export function Shipment() {
 export function RecycledThing() {
   return {
     id: undefined,
+    recyclable_type: undefined,
     customer_id: undefined,
     confirmed_user_id: undefined,
     amount: undefined,
     confirmed_amount: undefined,
-    recycled_user: '',
+    recycled_user: undefined,
     confirmed_at: undefined,
     created_at: undefined,
     updated_at: undefined
@@ -46,7 +49,7 @@ export function QcRecord() {
     id: undefined,
     recycled_thing_id: undefined,
     bad_amount: undefined,
-    type: '',
+    type: undefined,
     created_at: undefined,
     updated_at: undefined
   }
@@ -55,9 +58,9 @@ export function QcRecord() {
 export function Customer() {
   return {
     id: undefined,
-    name: '',
-    address: '',
-    salesman: '',
+    name: undefined,
+    address: undefined,
+    salesman: undefined,
     created_at: undefined,
     updated_at: undefined
   }
@@ -66,10 +69,10 @@ export function Customer() {
 export function User() {
   return {
     id: undefined,
-    phone: '',
-    email: '',
-    name: '',
-    avatar: '',
+    phone: undefined,
+    email: undefined,
+    name: undefined,
+    avatar: undefined,
     created_at: undefined,
     updated_at: undefined
   }
@@ -78,8 +81,8 @@ export function User() {
 export function Role() {
   return {
     id: undefined,
-    name: '',
-    display_name: '',
+    name: undefined,
+    display_name: undefined,
     created_at: undefined,
     updated_at: undefined
   }

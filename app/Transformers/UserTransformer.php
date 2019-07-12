@@ -39,10 +39,6 @@ class UserTransformer extends TransformerAbstract
 
     public function includeAuthorization(User $user)
     {
-        if (!$this->authorization) {
-            return $this->null();
-        }
-
         return $this->item($this->authorization, new AuthorizationTransformer());
     }
 

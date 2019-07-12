@@ -14,6 +14,7 @@ class Shipment extends Model
         'spec',
         'weight',
         'amount',
+        'recyclable_type',
     ];
 
     /**

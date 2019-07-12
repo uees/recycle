@@ -72,7 +72,7 @@
     >
       <el-table-column
         label="回收日期"
-        width="130px"
+        width="160px"
         align="center"
       >
         <template slot-scope="scope">
@@ -83,8 +83,11 @@
             content="留空表示当前日期"
             placement="top-start"
           >
-            <el-input
+            <el-date-picker
               v-model="scope.row.created_at"
+              clearable
+              type="date"
+              placeholder="选择日期"
               class="edit-input"
               size="small"
             />
@@ -133,20 +136,17 @@
         <template slot-scope="scope">
           <el-select
             v-if="scope.row._is_recycle"
-            v-model="scope.row.type"
+            v-model="scope.row.recyclable_type"
             class="edit-input"
             size="small"
           >
-            <el-option
-              label="桶"
-              value="bucket"
-            />
-            <el-option
-              label="纸箱"
-              value="box"
+            <el-option v-for="item in recyclable_types"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value"
             />
           </el-select>
-          <span v-else>{{ scope.row.type }}</span>
+          <span v-else>{{ scope.row.recyclable_type }}</span>
         </template>
       </el-table-column>
 
@@ -193,12 +193,14 @@
             v-model="scope.row.confirmed_amount"
             class="edit-input"
             size="small"
+            @keyup.enter.native="confirmEdit(scope)"
           />
           <template v-else>
-            <span
+            <el-link
               v-if="scope.row.id"
+              type="primary"
               @click="handleConfirm(scope)"
-            >{{ scope.row.confirmed_amount ? scope.row.confirmed_amount : '确认数量' }}</span>
+            >{{ scope.row.confirmed_amount ? scope.row.confirmed_amount : '确认数量' }}</el-link>
             <span v-else>{{ scope.row.confirmed_amount }}</span>
           </template>
         </template>
@@ -206,11 +208,12 @@
 
       <el-table-column
         label="确认人"
-        width="130px"
+        width="100px"
         align="center"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.confirmed_user_id }}</span>
+          <span v-if="scope.row.confirmed_user">{{ scope.row.confirmed_user.data.name }}</span>
+          <span v-else>{{ scope.row.confirmed_user_id }}</span>
         </template>
       </el-table-column>
 
@@ -230,8 +233,20 @@
         align="center"
       >
         <template slot-scope="scope">
-          <!-- todo 点击显示检测框 -->
-          <span>{{ scope.row.qc_records }}</span>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="点击显示检测窗口"
+            placement="top"
+          >
+            <el-link
+              type="primary"
+              @click="handleQC(scope)"
+            > <span v-if="scope.row.qc_records && scope.row.qc_records.data.length > 0">
+                {{ scope.row.qc_records.data | count_bad }}
+              </span>
+              <span v-else>0</span></el-link>
+          </el-tooltip>
         </template>
       </el-table-column>
 
@@ -287,18 +302,32 @@
         @current-change="handleCurrentChange"
       />
     </div>
+
+    <qc-records @qc-done="qcDone" />
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 import { deepClone } from '@/utils'
 import { recyclesApi, recycle, updateRecycled, confirm } from '@/api/erp'
 import { RecycledThing } from '@/defines/models'
+import { RECYCLABLE_TYPES } from '@/defines/consts'
 import Pagination from '../mixins/Pagination'
+import QcRecords from './qc_records'
 
 export default {
   name: 'RecycledThings',
+  filters: {
+    count_bad(records) {
+      return records.reduce((total, record) => {
+        return total + record.bad_amount
+      }, 0)
+    }
+  },
+  components: {
+    QcRecords
+  },
   mixins: [Pagination],
   data() {
     return {
@@ -315,6 +344,7 @@ export default {
         sort_by: 'id',
         order: 'desc'
       },
+      recyclable_types: RECYCLABLE_TYPES,
       pickerDate: null,
       pickerOptions: {
         shortcuts: [{
@@ -366,6 +396,11 @@ export default {
     ...mapActions('erp/basedata', [
       'loadCustomers'
     ]),
+    ...mapMutations('erp/qc_records', [
+      'SET_VISIBLE',
+      'SET_RECYCLED_THING',
+      'SET_INDEX'
+    ]),
     newObj() {
       return RecycledThing()
     },
@@ -412,6 +447,11 @@ export default {
     handleConfirm(scope) {
       scope.row._is_confirm = true
     },
+    handleQC(scope) {
+      this.SET_RECYCLED_THING(scope.row)
+      this.SET_INDEX(scope.$index)
+      this.SET_VISIBLE(true)
+    },
     cancelEdit(scope) {
       if (scope.row._is_create) {
         this.tableData.splice(scope.$index, 1)
@@ -425,6 +465,7 @@ export default {
       const validate = this.validateForm(scope.row)
       if (validate) {
         let response
+        scope.row.include = this.queryParams.include // call loadRelByModel
         if (scope.row._is_create) {
           response = await recycle(scope.row)
         } else if (scope.row._is_recycle) {
@@ -453,7 +494,7 @@ export default {
       }
     },
     validateForm(row) {
-      if (row._is_recycle && (!row.customer_id || !row.amount || !row.type)) {
+      if (row._is_recycle && (!row.customer_id || !row.amount || !row.recyclable_type)) {
         this.$message({
           message: '回收类型, 客户, 数量 必填',
           type: 'error'
@@ -470,7 +511,17 @@ export default {
     },
     dateChanged() {
       this.handleFilter()
+    },
+    qcDone(records, index) {
+      const row = this.tableData[index]
+      row.qc_records.data = records
     }
   }
 }
 </script>
+
+<style scoped>
+.el-date-editor.el-input.edit-input {
+  width: 100%;
+}
+</style>

@@ -15,6 +15,7 @@ class CreateShipmentsTable extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum('recyclable_type', ['bucket', 'box'])->nullable();
             $table->unsignedInteger('customer_id')->index();
             $table->unsignedInteger('created_user_id')->nullable();
             $table->string('product_name', 128);

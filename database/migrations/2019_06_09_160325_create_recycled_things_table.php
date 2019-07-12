@@ -20,7 +20,7 @@ class CreateRecycledThingsTable extends Migration
             $table->decimal('amount')->nullable();
             $table->decimal('confirmed_amount')->nullable();
             $table->string('recycled_user', 64)->nullable();
-            $table->enum('type', ['bucket', 'box'])->nullable();
+            $table->enum('recyclable_type', ['bucket', 'box'])->nullable();
             $table->timestamp('confirmed_at')->nullable();
             $table->timestamps();
         });

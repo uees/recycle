@@ -15,6 +15,7 @@ class CreateEnteringWarehousesTable extends Migration
     {
         Schema::create('entering_warehouses', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum('recyclable_type', ['bucket', 'box'])->nullable();
             $table->string('product_name', 128);
             $table->string('product_batch', 64)->index();
             $table->string('spec', 64)->nullable();

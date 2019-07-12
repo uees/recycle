@@ -3,6 +3,7 @@
 namespace App\Api\V1;
 
 use App\Models\QcRecord;
+use App\Models\RecycledThing;
 use App\Transformers\QcRecordTransformer;
 use Illuminate\Http\Request;
 
@@ -13,9 +14,14 @@ class QcRecordController extends Controller
     {
         $query = QcRecord::query();
         $this->loadRelByQuery($query);
-        $this->parseWhere($query, ['type', 'created_at']);
+        $this->parseWhere($query, ['recyclable_type', 'created_at', 'recycled_thing_id']);
 
         $query->orderBy($this->getSortBy(), $this->getOrder());
+        
+        if ($request->filled('all')) {
+            $records = $query->get();
+            return $this->response->collection($records, new QcRecordTransformer());
+        }
 
         $pagination = $query->paginate($this->getPerPage())
             ->appends($request->except('page'));
@@ -39,10 +45,18 @@ class QcRecordController extends Controller
             'bad_amount' => 'bail|required|numeric',
         ]);
 
-        $record = new QcRecord;
-        $record->fill($request->only(['recycled_thing_id', 'bad_amount']));
+        $recycled = RecycledThing::whereId($request->get('recycled_thing_id'))
+            ->firstOrFail();
 
-        if ($this->user->hasRole('iqc')) {
+        $record = new QcRecord;
+        $record->fill($request->only(['bad_amount']));
+
+        $record->recycled_thing()->associate($recycled);
+        $record->recyclable_type = $recycled->recyclable_type;
+        
+        if ($type = $request->get('type')) {
+            $record->type = $type;
+        } elseif ($this->user->hasRole('iqc')) {
             $record->type = 'IQC';
         } else {
             $record->type = 'SC';
@@ -68,7 +82,12 @@ class QcRecordController extends Controller
 
         $this->authorize('update', $record);
 
-        $record->fill($request->only(['recycled_thing_id', 'bad_amount']));
+        $record->fill($request->only(['bad_amount']));
+
+        $recycled = RecycledThing::whereId($request->get('recycled_thing_id'))->firstOrFail();
+        $record->recycled_thing()->associate($recycled);
+        $record->recyclable_type = $recycled->recyclable_type;
+
         $record->save();
         $this->loadRelByModel($record);
 

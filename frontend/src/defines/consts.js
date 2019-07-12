@@ -14,3 +14,13 @@ export const specsKeyValue = specs.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name
   return acc
 }, {})
+
+export const RECYCLABLE_TYPES = [
+  {value: 'bucket', label: '桶'},
+  {value: 'box', label: '纸箱'}
+]
+
+export const QC_TYPES = [
+  {value: 'IQC', label: 'IQC'},
+  {value: 'SC', label: '生产部'}
+]

@@ -11,6 +11,7 @@ class QcRecord extends Model
     protected $fillable = [
         'bad_amount',
         'type',
+        'recyclable_type',
     ];
 
     /**

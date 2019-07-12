@@ -23,19 +23,11 @@ class ShipmentTransformer extends TransformerAbstract
 
     public function includeCustomer(Shipment $shipment)
     {
-        if (!$shipment->customer()) {
-            return $this->null();
-        }
-
         return $this->item($shipment->customer, new CustomerTransformer());
     }
 
     public function includeCreatedUser(Shipment $shipment)
     {
-        if (!$shipment->created_user()->exists()) {
-            return $this->null();
-        }
-
         return $this->item($shipment->created_user, new UserTransformer());
     }
 }

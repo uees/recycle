@@ -17,6 +17,7 @@ class CreateQcRecordsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('recycled_thing_id')->nullable();
             $table->decimal('bad_amount')->default(0);
+            $table->enum('recyclable_type', ['bucket', 'box'])->nullable();
             $table->enum('type', ['IQC', 'SC'])->default('IQC');
             $table->timestamps();
         });

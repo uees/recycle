@@ -12,7 +12,7 @@ class RecycledThing extends Model
         'amount',
         'confirmed_amount',
         'recycled_user',
-        'type',
+        'recyclable_type',
     ];
 
     /**
@@ -47,6 +47,6 @@ class RecycledThing extends Model
      */
     public function qc_records()
     {
-        return $this->hasMany(QcRecord::class);
+        return $this->hasMany(QcRecord::class, 'recycled_thing_id');
     }
 }
