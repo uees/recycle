@@ -13,7 +13,8 @@
         "tymon/jwt-auth": "1.0.0-rc.1",
         "guzzlehttp/guzzle": "^6.3",
         "palanik/lumen-cors": "dev-master",
-        "liyu/dingo-serializer-switch": "^0.3.1"
+        "liyu/dingo-serializer-switch": "^0.3.1",
+        "phpoffice/phpspreadsheet": "^1.8"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

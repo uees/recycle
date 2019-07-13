@@ -41,6 +41,21 @@
       </el-button>
     </div>
 
+    <div class="filter-container">
+      <el-upload
+              class="filter-item"
+              name="xlsx"
+              ref="upload"
+              :http-request="handleUpload"
+              :on-success="handleUploadSuccess"
+              :file-list="fileList"
+              :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传xlsx文件</div>
+      </el-upload>
+    </div>
+
     <el-table
       v-loading="listLoading"
       :data="tableData"
@@ -197,7 +212,8 @@ export default {
       queryParams: {
         product_name: undefined,
         product_batch: undefined
-      }
+      },
+      fileList: []
     }
   },
   computed: {
@@ -241,6 +257,18 @@ export default {
         index: scope.$index,
         visible: true
       })
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    beforeUpload() {
+
+    },
+    handleUpload() {
+      // todo 自定义上传
+    },
+    handleUploadSuccess() {
+      this.$refs.upload.clearFiles() // 清空已上传的文件列表
     }
   }
 }
