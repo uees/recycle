@@ -43,16 +43,31 @@
 
     <div class="filter-container">
       <el-upload
-              class="filter-item"
-              name="xlsx"
-              ref="upload"
-              :http-request="handleUpload"
-              :on-success="handleUploadSuccess"
-              :file-list="fileList"
-              :auto-upload="false">
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传xlsx文件</div>
+        ref="upload"
+        class="filter-item"
+        action="nothing"
+        accept="application/msexcel"
+        :before-upload="beforeUpload"
+        :http-request="handleUpload"
+        :on-success="onUploadSuccess"
+        :file-list="fileList"
+        :auto-upload="false"
+      >
+        <el-button
+          slot="trigger"
+          size="small"
+          type="primary"
+        >选取文件</el-button>
+        <el-button
+          style="margin-left: 10px;"
+          size="small"
+          type="success"
+          @click="submitUpload"
+        >上传到服务器</el-button>
+        <div
+          slot="tip"
+          class="el-upload__tip"
+        >只能上传xlsx文件</div>
       </el-upload>
     </div>
 
@@ -261,13 +276,16 @@ export default {
     submitUpload() {
       this.$refs.upload.submit()
     },
-    beforeUpload() {
-
+    beforeUpload(file) {
+      console.log(file)
     },
-    handleUpload() {
+    async handleUpload() {
       // todo 自定义上传
+      console.log('handleUpload')
+      return true
     },
-    handleUploadSuccess() {
+    onUploadSuccess(response, file, fileList) {
+      console.log('onUploadSuccess')
       this.$refs.upload.clearFiles() // 清空已上传的文件列表
     }
   }
