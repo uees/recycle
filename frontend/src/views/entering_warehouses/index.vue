@@ -281,11 +281,10 @@ export default {
     },
     async handleUpload() {
       // todo 自定义上传
-      console.log('handleUpload')
+      this.unimplemented()
       return true
     },
     onUploadSuccess(response, file, fileList) {
-      console.log('onUploadSuccess')
       this.$refs.upload.clearFiles() // 清空已上传的文件列表
     }
   }
