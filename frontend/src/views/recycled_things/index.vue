@@ -342,28 +342,15 @@ import { deepClone } from '@/utils'
 import { recyclesApi, recycle, updateRecycled, confirm } from '@/api/erp'
 import { RecycledThing } from '@/defines/models'
 import { RECYCLABLE_TYPES } from '@/defines/consts'
+import { recyclableType, countBad } from '@/filters'
 import Pagination from '../mixins/Pagination'
 import QcRecords from './qc_records'
 
 export default {
   name: 'RecycledThings',
   filters: {
-    count_bad(records) {
-      let amount = 0
-      for (const record of records) {
-        amount += +record.bad_amount
-      }
-      return amount
-    },
-    recyclableType(data) {
-      const el = RECYCLABLE_TYPES.find(el => {
-        if (el.value === data) {
-          return true
-        }
-      })
-
-      return el.label
-    }
+    countBad,
+    recyclableType
   },
   components: {
     QcRecords

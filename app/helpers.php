@@ -1,22 +1,37 @@
 <?php
 
-defined('_WEIGHT_SPECS') or define('_WEIGHT_SPECS', [
-    'g_1kg' => 1,
-    'g_4kg' => 4,
-    'g_5kg' => 5,
-    'g_20kg' => 20,
-    'x_10kg' => 10,
-    'x_15kg' => 15,
-    'x_18kg' => 18,
-    'x_20kg' => 20,
-]);
+if (!function_exists('recyclable_type')) {
+    function recyclable_type($product_name)
+    {
+        if (preg_match("/^A-9060[ABCDEFG].*内袋$/i", $product_name)) {
+            return 'bucket';
+        } elseif (preg_match("/^SP.*内袋$/i", $product_name)) {
+            return 'bucket';
+        } elseif (preg_match("/.*内袋$/i", $product_name)) {
+            return 'box';
+        }
+        return '';
+    }
+}
 
-defined('_RECYCLABLE_TYPE_SPECS') or define('_RECYCLABLE_TYPE_SPECS', [
-    'g_20kg' => 'bucket',
-    'x_15kg' => 'bucket',
-    'x_18kg' => 'bucket',
-    'x_20kg' => 'box',
-]);
+if (!function_exists('calc_amount')) {
+    function calc_amount($weight, $spec)
+    {
+        $matches = null;
+        $per_weight = 0;
+        $amount = 0;
+        preg_match('/\d+\.?\d+/', $spec, $matches);
+        if (!empty($matches)) {
+            $per_weight = (float)$matches[0];
+        }
+
+        if ($per_weight != 0) {
+            $amount = (int)($weight / $per_weight);
+        }
+
+        return $amount;
+    }
+}
 
 // 获取当前登录用户
 if (!function_exists('auth_user')) {

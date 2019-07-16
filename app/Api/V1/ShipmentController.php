@@ -62,23 +62,29 @@ class ShipmentController extends Controller
             $customer = Customer::where('id', $customer)->firstOrFail();
         }
 
-        $shipment = new Shipment();
-        $shipment->fill($request->all());
+        // 使用 updateOrCreate 防止 Excel 导入时重复
+        $shipment = Shipment::query()->updateOrCreate($request->only([
+            'product_name', 'product_batch', 'spec', 'weight', 'created_at'
+        ]), [
+            $request->only(['recyclable_type'])
+        ]);
 
-        // created_at 设计的作用是发货日期, 是可填充的
+        // created_at 设计的作用是发货日期, 但不是 fillable, 所以要再手动赋值
         if ($created_at = $request->get('created_at')) {
             $shipment->created_at = $created_at;
         }
 
         // 设置可回收类别
-        if (in_array($shipment->spec, array_keys(_RECYCLABLE_TYPE_SPECS))) {
-            if (!$shipment->recyclable_type) {
-                $shipment->recyclable_type = _RECYCLABLE_TYPE_SPECS[$shipment->spec];
-            }
+        if (!$shipment->recyclable_type) {
+            $shipment->recyclable_type = recyclable_type($shipment->product_name);
+        }
+
+        if (!$shipment->amount && $shipment->spec) {
+            $shipment->amount = calc_amount($shipment->weight, $shipment->spec);
         }
 
         $shipment->customer()->associate($customer);
-        $shipment->created_user()->associate($this->user());
+        $shipment->created_user()->associate($this->user);
 
         $shipment->save();
 
@@ -107,16 +113,18 @@ class ShipmentController extends Controller
 
         $shipment->fill($request->all());
 
-        // created_at 设计的作用是发货日期, 是可填充的
+        // created_at 设计的作用是发货日期, 但不是 fillable, 所以要再手动赋值
         if ($created_at = $request->get('created_at')) {
             $shipment->created_at = $created_at;
         }
 
         // 设置可回收类别
-        if (in_array($shipment->spec, array_keys(_RECYCLABLE_TYPE_SPECS))) {
-            if (!$shipment->recyclable_type) {
-                $shipment->recyclable_type = _RECYCLABLE_TYPE_SPECS[$shipment->spec];
-            }
+        if (!$shipment->recyclable_type) {
+            $shipment->recyclable_type = recyclable_type($shipment->product_name);
+        }
+
+        if (!$shipment->amount && $shipment->spec) {
+            $shipment->amount = calc_amount($shipment->weight, $shipment->spec);
         }
 
         $shipment->customer()->associate($customer);

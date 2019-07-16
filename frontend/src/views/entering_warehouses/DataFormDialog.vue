@@ -13,6 +13,26 @@
         label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
+        <el-form-item
+          label="可回收类型"
+          prop="recyclable_type"
+        >
+          <el-select v-model="formData.recyclable_type">
+            <el-option
+              v-for="item in recyclable_types"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item
+          label="可回收数量"
+          prop="amount"
+        >
+          <el-input v-model="formData.amount" />
+        </el-form-item>
 
         <!--prop 属性设置为需校验的字段名-->
         <el-form-item
@@ -96,7 +116,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { enteringWarehousesApi } from '@/api/erp'
-import { specs } from '@/defines/consts'
+import { specs, RECYCLABLE_TYPES } from '@/defines/consts'
 import DataFormDialog from '../mixins/DataFormDialog'
 
 export default {
@@ -108,6 +128,7 @@ export default {
     return {
       api: enteringWarehousesApi,
       specs: specs,
+      recyclable_types: RECYCLABLE_TYPES,
       dataRules: {
         product_name: { required: true, message: '必填项', trigger: 'blur' },
         product_batch: { required: true, message: '必填项', trigger: 'blur' },

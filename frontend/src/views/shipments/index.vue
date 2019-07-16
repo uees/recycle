@@ -105,6 +105,16 @@
       </el-table-column>
 
       <el-table-column
+        label="回收类别"
+        width="100px"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.recyclable_type | recyclableType }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
         label="重量"
         align="center"
         width="120px"
@@ -120,7 +130,7 @@
         width="95"
       >
         <template slot-scope="{row}">
-          <span v-if="row.amount">{{ row.amount }}桶</span>
+          <span v-if="row.amount">{{ Number(row.amount) }}</span>
         </template>
       </el-table-column>
 
@@ -183,6 +193,7 @@
 import { mapState, mapActions } from 'vuex'
 import { shipmentsApi } from '@/api/erp'
 import { Shipment } from '@/defines/models'
+import { recyclableType } from '@/filters'
 import DataList from '../mixins/DataList'
 import Pagination from '../mixins/Pagination'
 import DataFormDialog from './DataFormDialog'
@@ -190,6 +201,7 @@ import DataFormDialog from './DataFormDialog'
 export default {
   name: 'Shipment',
   components: { DataFormDialog },
+  filters: { recyclableType },
   mixins: [DataList, Pagination],
   data() {
     return {

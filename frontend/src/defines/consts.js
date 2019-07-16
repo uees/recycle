@@ -1,12 +1,21 @@
 export const specs = [
-  { key: 'g_1kg', display_name: '1kg/罐' },
-  { key: 'g_4kg', display_name: '4kg/罐' },
-  { key: 'g_5kg', display_name: '5kg/罐' },
-  { key: 'g_20kg', display_name: '20kg/桶' },
-  { key: 'x_10kg', display_name: '10kg/箱' },
-  { key: 'x_15kg', display_name: '15kg/组' },
-  { key: 'x_18kg', display_name: '18kg/组' },
-  { key: 'x_20kg', display_name: '20kg/箱' }
+  { key: '1KG', display_name: '1KG' },
+  { key: '1.25KG', display_name: '1.25KG' },
+  { key: '4KG', display_name: '4KG' },
+  { key: '5KG', display_name: '5KG' },
+  { key: '10KG', display_name: '10KG' },
+  { key: '12KG', display_name: '12KG' },
+  { key: '14.4KG', display_name: '14.4KG' },
+  { key: '15KG', display_name: '15KG' },
+  { key: '16KG', display_name: '16KG' },
+  { key: '18KG', display_name: '18KG' },
+  { key: '20KG', display_name: '20KG' },
+  { key: '24KG', display_name: '24KG' },
+  { key: '25KG', display_name: '25KG' },
+  { key: '4加仑', display_name: '4加仑' },
+  { key: '500ML', display_name: '500ML' },
+  { key: '12L', display_name: '12L' },
+  { key: '16L', display_name: '16L' }
 ]
 
 // arr to obj, such as { g_1kg : "1kg/罐", x_20kg : "20kg/箱" }

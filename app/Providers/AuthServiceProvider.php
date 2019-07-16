@@ -44,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::policy(\App\Models\Shipment::class, \App\Policies\ShipmentPolicy::class);
         Gate::policy(\App\Models\QcRecord::class, \App\Policies\QcRecordPolicy::class);
         Gate::policy(\App\Models\RecycledThing::class, \App\Policies\RecycledThingPolicy::class);
+        Gate::policy(\App\Models\EnteringWarehouse::class, \App\Policies\EnteringWarehousePolicy::class);
 
         Gate::define('update-customers', function ($user, $customer) {
             return $user->hasRole(['finished_warehouse_keeper', 'boss', 'management_representative']);

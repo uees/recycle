@@ -41,10 +41,24 @@ class EnteringWarehouseController extends Controller
     {
         $this->validate($request, $this->validateRules());
 
-        // $this->authorize('update-customers', Customer::class);
+        $this->authorize('create', EnteringWarehouse::class);
 
-        $product = new EnteringWarehouse();
-        $product->fill($request->all());
+        // 使用 updateOrCreate 防止 Excel 导入时重复
+        $product = EnteringWarehouse::query()->updateOrCreate($request->only([
+            'product_name', 'product_batch', 'spec', 'weight', 'entered_at'
+        ]), [
+            $request->only(['recyclable_type', 'made_at'])
+        ]);
+
+        // 设置可回收类别
+        if (!$product->recyclable_type) {
+            $product->recyclable_type = recyclable_type($product->product_name);
+        }
+
+        if (!$product->amount && $product->spec) {
+            $product->amount = calc_amount($product->weight, $product->spec);
+        }
+
         $product->save();
 
         return $this->response
@@ -60,9 +74,19 @@ class EnteringWarehouseController extends Controller
             ->where('id', $id)
             ->firstOrFail();
 
-        // $this->authorize('update-customers', $product);
+        $this->authorize('update', $product);
 
         $product->fill($request->all());
+
+        // 设置可回收类别
+        if (!$product->recyclable_type) {
+            $product->recyclable_type = recyclable_type($product->product_name);
+        }
+
+        if (!$product->amount && $product->spec) {
+            $product->amount = calc_amount($product->weight, $product->spec);
+        }
+
         $product->save();
 
         return $this->response
@@ -74,7 +98,7 @@ class EnteringWarehouseController extends Controller
     {
         $product = EnteringWarehouse::findOrFail($id);
 
-        // $this->authorize('update-customers', $customer);
+        $this->authorize('delete', $product);
 
         if ($product->delete()) {
             return $this->response->noContent();

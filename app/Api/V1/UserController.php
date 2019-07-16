@@ -104,7 +104,7 @@ class UserController extends Controller
 
     public function me()
     {
-        $user = $this->user();
+        $user = $this->user;
 
         $this->loadRelByModel($user);
 
@@ -121,7 +121,7 @@ class UserController extends Controller
             return $this->errorBadRequest($validator);
         }
 
-        $user = $this->user();
+        $user = $this->user;
         $attributes = array_filter($request->only('name', 'avatar'));
         if ($attributes) {
             $user->update($attributes);
@@ -144,7 +144,7 @@ class UserController extends Controller
             return $this->errorBadRequest($validator);
         }
 
-        $user = $this->user();
+        $user = $this->user;
         $auth = Auth::once([
             'email' => $user->email,
             'password' => $request->get('old_password'),

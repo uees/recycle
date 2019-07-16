@@ -140,7 +140,7 @@ class RecycleController extends Controller
 
         $recycled->confirmed_amount = $request->get('confirmed_amount');
         $recycled->confirmed_at = Carbon::now();
-        $recycled->confirmed_user()->associate($this->user());
+        $recycled->confirmed_user()->associate($this->user);
         $recycled->save();
 
         $this->loadRelByModel($recycled);

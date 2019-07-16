@@ -7,12 +7,27 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Dingo\Api\Routing\Helpers;
-use Dingo\Api\Exception\ValidationHttpException;
+
 
 class Controller extends BaseController
 {
     // 接口帮助调用
     use Helpers;
+
+    public function __construct()
+    {
+        // 'serializer:array', // if you want to remove data wrap
+        $this->middleware('serializer');
+
+        $user = \Auth::user();
+        if (!$user || !$user->hasRole('admin')) {
+            $this->middleware('api.throttle', [
+                // each route have a limit of 100 of 1 minutes
+                'limit' => 100,
+                'expires' => 1,
+            ]);
+        }
+    }
 
     /**
      * @return int
