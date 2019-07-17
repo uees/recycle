@@ -139,7 +139,13 @@ class RecycleController extends Controller
         $this->authorize('confirm', $recycled);
 
         $recycled->confirmed_amount = $request->get('confirmed_amount');
-        $recycled->confirmed_at = Carbon::now();
+
+        if ($confirmed_at = $request->get('confirmed_at')) {
+            $recycled->confirmed_at = $confirmed_at;
+        } else {
+            $recycled->confirmed_at = Carbon::now();
+        }
+
         $recycled->confirmed_user()->associate($this->user);
         $recycled->save();
 

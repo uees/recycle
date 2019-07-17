@@ -51,6 +51,11 @@
     </div>
 
     <div class="logo">容大ERP - 回收管理系统</div>
+
+    <div class="hello">
+      <el-tag>你好: {{ user.name }}({{ user.roles | roles }})</el-tag>
+    </div>
+
   </div>
 </template>
 
@@ -59,8 +64,12 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
+import { roles } from '@/filters'
 
 export default {
+  filters: {
+    roles
+  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -122,6 +131,12 @@ export default {
     font-size: 1.5em;
     font-weight: bold;
     color: blue;
+  }
+
+  .hello {
+    float: right;
+    line-height: 50px;
+    padding-right: 30px;
   }
 
   .right-menu {

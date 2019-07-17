@@ -67,6 +67,11 @@
       </el-button>
     </div>
 
+    <panel-group
+      :total-statistics="tableData"
+      :recyclable-type="queryParams.recyclable_type"
+    />
+
     <el-table
       :data="tableData"
       border
@@ -115,15 +120,19 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { getRecycledStatistics, makeRecycledStatistics } from '@/api/erp'
 import { RECYCLABLE_TYPES } from '@/defines/consts'
 import { recyclableType as recyclableTypeLabel } from '@/filters'
+import PanelGroup from './PanelGroup'
 
 export default {
   name: 'Dashboard',
   filters: {
     recyclableTypeLabel
+  },
+  components: {
+    PanelGroup
   },
   data() {
     return {
@@ -140,9 +149,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'user'
-    ]),
     ...mapState('erp/basedata', [
       'customers'
     ])

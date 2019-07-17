@@ -19,3 +19,8 @@ export function countBad(records) {
   }
   return amount
 }
+
+export function roles(roles) {
+  const tmp = roles.map(role => role.display_name)
+  return tmp.join()
+}

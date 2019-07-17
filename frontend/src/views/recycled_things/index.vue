@@ -101,6 +101,7 @@
               v-model="scope.row.created_at"
               clearable
               type="date"
+              value-format="yyyy-MM-dd HH:mm:ss"
               placeholder="选择日期"
               class="edit-input"
               size="small"
@@ -251,6 +252,39 @@
       </el-table-column>
 
       <el-table-column
+        label="确认日期"
+        width="130px"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <el-tooltip
+            v-if="scope.row._is_confirm"
+            class="item"
+            effect="dark"
+            content="留空表示当前日期"
+            placement="top-start"
+          >
+            <el-date-picker
+              v-model="scope.row.confirmed_at"
+              clearable
+              type="date"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="选择日期"
+              class="edit-input"
+              size="small"
+            />
+          </el-tooltip>
+          <el-link
+            v-else-if="scope.row.id"
+            type="primary"
+            @click="handleConfirm(scope)"
+          >
+            <span>{{ scope.row.confirmed_at }}</span>
+          </el-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column
         label="确认人"
         width="100px"
         align="center"
@@ -260,16 +294,6 @@
             {{ scope.row.confirmed_user.data.name }}
           </span>
           <span v-else>{{ scope.row.confirmed_user_id }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="确认日期"
-        width="130px"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.confirmed_at }}</span>
         </template>
       </el-table-column>
 

@@ -13,6 +13,7 @@ class RecycledThing extends Model
         'confirmed_amount',
         'recycled_user',
         'recyclable_type',
+        'confirmed_at',
     ];
 
     /**
