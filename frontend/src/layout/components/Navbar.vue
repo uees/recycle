@@ -49,6 +49,8 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
+    <div class="logo">容大ERP - 回收管理系统</div>
   </div>
 </template>
 
@@ -111,6 +113,15 @@ export default {
   .errLog-container {
     display: inline-block;
     vertical-align: top;
+  }
+
+  .logo {
+    float: right;
+    line-height: 50px;
+    padding-right: 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: blue;
   }
 
   .right-menu {

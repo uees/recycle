@@ -25,6 +25,20 @@
           :value="customer.id"
         />
       </el-select>
+      <el-select
+        v-model="queryParams.recyclable_type"
+        clearable
+        style="width: 200px;"
+        placeholder="回收类型"
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in recyclable_types"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
       <el-input
         v-model="queryParams.recycled_user"
         placeholder="接收人"
@@ -185,7 +199,7 @@
             type="primary"
             @click="handleEditRecycled(scope)"
           >
-            <span>{{ scope.row.amount }}</span>
+            <span style="color:red;">{{ scope.row.amount }}</span>
           </el-link>
         </template>
       </el-table-column>
@@ -366,6 +380,7 @@ export default {
         confirmed_user_id: undefined,
         recycled_user: undefined,
         created_at: undefined,
+        recyclable_type: undefined,
         include: 'customer,confirmed_user,qc_records',
         q: '',
         sort_by: 'id',

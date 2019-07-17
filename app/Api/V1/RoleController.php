@@ -12,6 +12,8 @@ class RoleController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('system');
+
         $query = Role::query();
         $this->loadRelByQuery($query);
 
@@ -42,12 +44,12 @@ class RoleController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('system');
+
         $this->validate($request, [
             'name' => 'bail|required|unique:roles|max:64',
             'display_name' => 'required|max:64',
         ]);
-
-        $this->authorize('create', Role::class);
 
         $role = new Role();
         $role->fill($request->all());
@@ -59,6 +61,8 @@ class RoleController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize('system');
+
         $this->validate($request, [
             'name' => 'bail|required|max:64',
             'display_name' => 'required|max:64',
@@ -70,8 +74,6 @@ class RoleController extends Controller
 
         $role = Role::whereId($id)->firstOrFail();
 
-        $this->authorize('update', $role);
-
         $role->fill($request->all());
         $role->save();
 
@@ -82,9 +84,9 @@ class RoleController extends Controller
 
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
+        $this->authorize('system');
 
-        $this->authorize('delete', $role);
+        $role = Role::findOrFail($id);
 
         // 首先角色下的用户去除该角色
         foreach ($role->users as $user) {

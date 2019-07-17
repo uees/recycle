@@ -15,6 +15,21 @@
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
+      <el-select
+        v-model="queryParams.recyclable_type"
+        clearable
+        class="filter-item"
+        style="width: 200px;"
+        placeholder="回收类型"
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in recyclable_types"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
       <el-button
         class="filter-item"
         type="primary"
@@ -130,7 +145,7 @@
         width="95"
       >
         <template slot-scope="{row}">
-          <span v-if="row.amount">{{ Number(row.amount) }}</span>
+          <span v-if="row.amount" style="color:red;">{{ Number(row.amount) }}</span>
         </template>
       </el-table-column>
 
@@ -194,6 +209,7 @@ import { mapState, mapActions } from 'vuex'
 import { shipmentsApi } from '@/api/erp'
 import { Shipment } from '@/defines/models'
 import { recyclableType } from '@/filters'
+import { RECYCLABLE_TYPES } from '@/defines/consts'
 import DataList from '../mixins/DataList'
 import Pagination from '../mixins/Pagination'
 import DataFormDialog from './DataFormDialog'
@@ -206,10 +222,12 @@ export default {
   data() {
     return {
       api: shipmentsApi,
+      recyclable_types: RECYCLABLE_TYPES,
       queryParams: {
         customer_id: undefined,
         created_user_id: undefined,
         created_at: undefined,
+        recyclable_type: undefined,
         include: 'customer'
       }
     }

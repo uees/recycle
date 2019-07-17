@@ -17,7 +17,7 @@ class ShipmentController extends Controller
 
         $this->loadRelByQuery($query);
 
-        $this->parseWhere($query, ['customer_id', 'created_user_id', 'created_at']);
+        $this->parseWhere($query, ['customer_id', 'created_user_id', 'created_at', 'recyclable_type']);
 
         if ($search = $request->get('q')) {
             $product_names = make_query_condition('product_name', $search);

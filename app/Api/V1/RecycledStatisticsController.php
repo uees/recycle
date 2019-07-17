@@ -19,7 +19,7 @@ class RecycledStatisticsController extends Controller
             $query->whereNull('customer_id');
         }
         $this->parseWhere($query, ['year', 'month', 'recyclable_type', 'customer_id']);
-        $query->orderBy($this->getSortBy(), $this->getOrder());
+        $query->orderBy('year', 'desc')->orderBy('month', 'desc');
         $results = $query->get();
 
         return $this->response->collection($results, new RecycledStatisticsTransformer());

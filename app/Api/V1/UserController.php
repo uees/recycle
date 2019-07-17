@@ -15,6 +15,8 @@ class UserController extends Controller
 {
     public function index()
     {
+        $this->authorize('system');
+
         $users = User::paginate();
 
         return $this->response->paginator($users, new UserTransformer());
@@ -29,6 +31,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('system');
+
         $validator = Validator::make($request->input(), [
             'email' => 'required|email|unique:users',
             'name' => 'required|string',
@@ -63,6 +67,8 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize('system');
+
         $this->validate($request, [
             'email' => 'required|email',
             'name' => 'required|string',
@@ -73,8 +79,6 @@ class UserController extends Controller
         }
 
         $user = User::whereId($id)->firstOrFail();
-
-        $this->authorize('update-users', $user);
 
         $user->fill($request->only(['email', 'name']));
         if ($password = $request->get('password')) {
@@ -91,9 +95,9 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
+        $this->authorize('system');
 
-        $this->authorize('delete-users', $user);
+        $user = User::findOrFail($id);
 
         if ($user->delete()) {
             return $this->response->noContent();

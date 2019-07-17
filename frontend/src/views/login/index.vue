@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">请登录</h3>
+        <h3 class="title">容大ERP登录</h3>
       </div>
 
       <el-form-item prop="email">
@@ -58,8 +58,8 @@
       >Login</el-button>
 
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span>password: any</span>
+        <span style="margin-right:20px;">email: your account</span>
+        <span>password: your account</span>
       </div>
     </el-form>
   </div>
@@ -87,8 +87,8 @@ export default {
     }
     return {
       loginForm: {
-        email: 'admin@szrd.com',
-        password: 'pwd1234'
+        email: '@szrd.com',
+        password: ''
       },
       loginRules: {
         email: [

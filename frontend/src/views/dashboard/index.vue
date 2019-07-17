@@ -33,6 +33,7 @@
 
       <el-select
         v-model="queryParams.recyclable_type"
+        clearable
         class="filter-item"
         style="width: 200px;"
         placeholder="回收类型"

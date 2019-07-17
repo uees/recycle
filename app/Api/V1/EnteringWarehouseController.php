@@ -13,7 +13,7 @@ class EnteringWarehouseController extends Controller
     {
         $query = EnteringWarehouse::query();
         $this->loadRelByQuery($query);
-        $this->parseWhere($query, ['product_name', 'product_batch']);
+        $this->parseWhere($query, ['product_name', 'product_batch', 'recyclable_type']);
 
         if ($search = $request->get('q')) {
             $name_condition = make_query_condition('product_name', $search);

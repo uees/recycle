@@ -16,7 +16,7 @@ class RecycleController extends Controller
     {
         $query = RecycledThing::query();
         $this->loadRelByQuery($query);
-        $this->parseWhere($query, ['customer_id', 'confirmed_user_id', 'recycled_user', 'created_at']);
+        $this->parseWhere($query, ['customer_id', 'confirmed_user_id', 'recycled_user', 'recyclable_type', 'created_at']);
 
         if ($search = $request->get('q')) {
             $recycled_users = make_query_condition('recycled_user', $search);
