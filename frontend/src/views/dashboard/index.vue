@@ -73,6 +73,7 @@
     />
 
     <el-table
+      v-loading="listLoading"
       :data="tableData"
       border
       style="width: 100%"
