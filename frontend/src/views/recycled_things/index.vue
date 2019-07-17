@@ -200,7 +200,7 @@
             type="primary"
             @click="handleEditRecycled(scope)"
           >
-            <span style="color:red;">{{ scope.row.amount }}</span>
+            <span style="color:red;">{{ Number(scope.row.amount) }}</span>
           </el-link>
         </template>
       </el-table-column>
@@ -240,14 +240,14 @@
             size="small"
             @keyup.enter.native="confirmEdit(scope)"
           />
-          <template v-else>
-            <el-link
-              v-if="scope.row.id"
-              type="primary"
-              @click="handleConfirm(scope)"
-            >{{ scope.row.confirmed_amount ? scope.row.confirmed_amount : '确认数量' }}</el-link>
-            <span v-else>{{ scope.row.confirmed_amount }}</span>
-          </template>
+
+          <el-link
+            v-else-if="scope.row.id"
+            type="primary"
+            @click="handleConfirm(scope)"
+          >
+            {{ scope.row.confirmed_amount ? Number(scope.row.confirmed_amount) : '确认数量' }}
+          </el-link>
         </template>
       </el-table-column>
 
