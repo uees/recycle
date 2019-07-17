@@ -92,7 +92,7 @@ class RecycleController extends Controller
         $this->validate($request, [
             'amount' => 'bail|required|numeric',
             'recyclable_type' => 'required',
-            'recycled_user' => 'bail|required|max:64',
+            'recycled_user' => 'nullable|max:64',
         ]);
 
         $customer = $request->get('customer_id');

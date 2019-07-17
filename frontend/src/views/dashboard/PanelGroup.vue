@@ -73,7 +73,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon
-            icon-class="people"
+            icon-class="bug"
             class-name="card-panel-icon"
           />
         </div>
