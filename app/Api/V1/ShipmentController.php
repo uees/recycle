@@ -80,7 +80,7 @@ class ShipmentController extends Controller
         }
 
         if (!$shipment->amount && $shipment->spec) {
-            $shipment->amount = calc_amount($shipment->weight, $shipment->spec);
+            $shipment->amount = calc_amount($shipment->weight, $shipment->spec, $shipment->recyclable_type);
         }
 
         $shipment->customer()->associate($customer);
@@ -124,7 +124,7 @@ class ShipmentController extends Controller
         }
 
         if (!$shipment->amount && $shipment->spec) {
-            $shipment->amount = calc_amount($shipment->weight, $shipment->spec);
+            $shipment->amount = calc_amount($shipment->weight, $shipment->spec, $shipment->recyclable_type);
         }
 
         $shipment->customer()->associate($customer);

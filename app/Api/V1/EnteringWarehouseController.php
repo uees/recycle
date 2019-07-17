@@ -56,7 +56,7 @@ class EnteringWarehouseController extends Controller
         }
 
         if (!$product->amount && $product->spec) {
-            $product->amount = calc_amount($product->weight, $product->spec);
+            $product->amount = calc_amount($product->weight, $product->spec, $product->recyclable_type);
         }
 
         $product->save();
@@ -84,7 +84,7 @@ class EnteringWarehouseController extends Controller
         }
 
         if (!$product->amount && $product->spec) {
-            $product->amount = calc_amount($product->weight, $product->spec);
+            $product->amount = calc_amount($product->weight, $product->spec, $product->recyclable_type);
         }
 
         $product->save();

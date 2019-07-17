@@ -15,7 +15,7 @@ if (!function_exists('recyclable_type')) {
 }
 
 if (!function_exists('calc_amount')) {
-    function calc_amount($weight, $spec)
+    function calc_amount($weight, $spec, $recyclable_type)
     {
         $matches = null;
         $per_weight = 0;
@@ -23,6 +23,18 @@ if (!function_exists('calc_amount')) {
         preg_match('/\d+\.?\d+/', $spec, $matches);
         if (!empty($matches)) {
             $per_weight = (float)$matches[0];
+            
+            if ($recyclable_type == 'box') {
+                if ($per_weight < 10) {
+                    $per_weight = 10;
+                } elseif ($per_weight < 20) {
+                    $per_weight = 10;
+                }
+            } elseif ($recyclable_type == 'bucket') {
+                if ($per_weight < 20) {
+                    $per_weight = 10;
+                }
+            }
         }
 
         if ($per_weight != 0) {
