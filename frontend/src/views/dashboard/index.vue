@@ -117,17 +117,12 @@
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { getRecycledStatistics, makeRecycledStatistics } from '@/api/erp'
 import { RECYCLABLE_TYPES } from '@/defines/consts'
+import { recyclableType as recyclableTypeLabel } from '@/filters'
 
 export default {
   name: 'Dashboard',
   filters: {
-    recyclableTypeLabel(val) {
-      const el = RECYCLABLE_TYPES.find(el => {
-        return el.value === val
-      })
-
-      return el.label
-    }
+    recyclableTypeLabel
   },
   data() {
     return {
