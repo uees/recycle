@@ -4,7 +4,7 @@
     class="panel-group"
   >
     <el-col
-      :xs="12"
+      :xs="24"
       :sm="12"
       :lg="6"
       class="card-panel-col"
@@ -24,7 +24,7 @@
     </el-col>
 
     <el-col
-      :xs="12"
+      :xs="24"
       :sm="12"
       :lg="6"
       class="card-panel-col"
@@ -32,7 +32,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon
-            icon-class="user"
+            icon-class="list"
             class-name="card-panel-icon"
           />
         </div>
@@ -44,7 +44,7 @@
     </el-col>
 
     <el-col
-      :xs="12"
+      :xs="24"
       :sm="12"
       :lg="6"
       class="card-panel-col"
@@ -52,7 +52,7 @@
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon
-            icon-class="user"
+            icon-class="list"
             class-name="card-panel-icon"
           />
         </div>
@@ -65,7 +65,7 @@
     </el-col>
 
     <el-col
-      :xs="12"
+      :xs="24"
       :sm="12"
       :lg="6"
       class="card-panel-col"
