@@ -5,6 +5,7 @@ namespace App\Api\V1;
 use App\Transformers\EnteringWarehouseTransformer;
 use App\Models\EnteringWarehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 
 class EnteringWarehouseController extends Controller
@@ -43,19 +44,23 @@ class EnteringWarehouseController extends Controller
 
         $this->authorize('create', EnteringWarehouse::class);
 
+        $attributes = $request->only(['product_name', 'product_batch', 'spec', 'weight', 'entered_at']);
+        if (empty($attributes['entered_at'])) {
+            $attributes['entered_at'] = Carbon::today()->toDateTimeString();
+        }
+
         // 使用 updateOrCreate 防止 Excel 导入时重复
-        $product = EnteringWarehouse::query()->updateOrCreate($request->only([
-            'product_name', 'product_batch', 'spec', 'weight', 'entered_at'
-        ]), [
-            $request->only(['recyclable_type', 'made_at'])
-        ]);
+        $product = EnteringWarehouse::query()->updateOrCreate(
+            $attributes,
+            $request->only(['recyclable_type', 'amount', 'made_at'])
+        );
 
         // 设置可回收类别
         if (!$product->recyclable_type) {
             $product->recyclable_type = recyclable_type($product->product_name);
         }
 
-        if (!$product->amount && $product->spec) {
+        if (!$product->amount) {
             $product->amount = calc_amount($product->weight, $product->spec, $product->recyclable_type);
         }
 
@@ -83,7 +88,7 @@ class EnteringWarehouseController extends Controller
             $product->recyclable_type = recyclable_type($product->product_name);
         }
 
-        if (!$product->amount && $product->spec) {
+        if (!$product->amount) {
             $product->amount = calc_amount($product->weight, $product->spec, $product->recyclable_type);
         }
 
@@ -112,10 +117,9 @@ class EnteringWarehouseController extends Controller
         return [
             'product_name' => 'bail|required|max:256',
             'product_batch' => 'bail|required|max:256',
+            'spec' => 'required',
             'weight' => 'bail|required|numeric',
             'amount' => 'nullable|numeric',
-            'made_at' => 'required',
-            'entered_at' => 'nullable',
         ];
     }
 }

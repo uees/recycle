@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Transformers\ShipmentTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 
 
 class ShipmentController extends Controller
@@ -63,15 +64,16 @@ class ShipmentController extends Controller
         }
 
         // 使用 updateOrCreate 防止 Excel 导入时重复
-        $shipment = Shipment::query()->updateOrCreate($request->only([
-            'product_name', 'product_batch', 'spec', 'weight', 'created_at'
-        ]), [
+        $shipment = Shipment::query()->updateOrCreate(
+            $request->only(['product_name', 'product_batch', 'spec', 'weight', 'created_at']),
             $request->only(['recyclable_type'])
-        ]);
+        );
 
         // created_at 设计的作用是发货日期, 但不是 fillable, 所以要再手动赋值
         if ($created_at = $request->get('created_at')) {
             $shipment->created_at = $created_at;
+        } else {
+            $shipment->created_at = Carbon::today()->toDateTimeString();
         }
 
         // 设置可回收类别
@@ -79,7 +81,7 @@ class ShipmentController extends Controller
             $shipment->recyclable_type = recyclable_type($shipment->product_name);
         }
 
-        if (!$shipment->amount && $shipment->spec) {
+        if (!$shipment->amount) {
             $shipment->amount = calc_amount($shipment->weight, $shipment->spec, $shipment->recyclable_type);
         }
 
@@ -116,6 +118,8 @@ class ShipmentController extends Controller
         // created_at 设计的作用是发货日期, 但不是 fillable, 所以要再手动赋值
         if ($created_at = $request->get('created_at')) {
             $shipment->created_at = $created_at;
+        } else {
+            $shipment->created_at = Carbon::today()->toDateTimeString();
         }
 
         // 设置可回收类别
@@ -123,7 +127,7 @@ class ShipmentController extends Controller
             $shipment->recyclable_type = recyclable_type($shipment->product_name);
         }
 
-        if (!$shipment->amount && $shipment->spec) {
+        if (!$shipment->amount) {
             $shipment->amount = calc_amount($shipment->weight, $shipment->spec, $shipment->recyclable_type);
         }
 
@@ -154,6 +158,7 @@ class ShipmentController extends Controller
             'customer_id' => 'bail|required|max:255',
             'product_name' => 'bail|required|max:128',
             'product_batch' => 'nullable|max:64',
+            'spec' => 'required',
             'weight' => 'bail|required|numeric',
             'amount' => 'nullable|numeric',
         ];
