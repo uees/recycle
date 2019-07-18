@@ -145,7 +145,7 @@ export default {
         year: undefined,
         month: undefined,
         customer_id: undefined,
-        recyclable_type: undefined
+        recyclable_type: 'bucket'
       }
     }
   },

@@ -175,7 +175,10 @@
         width="95"
       >
         <template slot-scope="{row}">
-          <span v-if="row.amount" style="color:red;">{{ Number(row.amount) }}</span>
+          <span
+            v-if="row.amount"
+            style="color:red;"
+          >{{ Number(row.amount) }}</span>
         </template>
       </el-table-column>
 
@@ -256,7 +259,7 @@ export default {
       queryParams: {
         product_name: undefined,
         product_batch: undefined,
-        recyclable_type: undefined
+        recyclable_type: 'bucket'
       },
       fileList: []
     }
