@@ -13,4 +13,5 @@
 
 $router->get('/', function () use ($router) {
     // return $router->app->version();
+    return redirect('/index.html'); // 跳转到 HTML5 ＷＥＢ　APP
 });

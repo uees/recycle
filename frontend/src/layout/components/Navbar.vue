@@ -50,7 +50,7 @@
       </el-dropdown>
     </div>
 
-    <div class="logo">容大ERP - 回收管理系统</div>
+    <div class="logo">{{ title }}</div>
 
     <div class="hello">
       <el-tag>你好: {{ user.name }}({{ user.roles | roles }})</el-tag>
@@ -65,6 +65,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import { roles } from '@/filters'
+import defaultSettings from '@/settings'
 
 export default {
   filters: {
@@ -74,6 +75,11 @@ export default {
     Breadcrumb,
     Hamburger,
     ErrorLog
+  },
+  data() {
+    return {
+      title: defaultSettings.title
+    }
   },
   computed: {
     ...mapGetters([
