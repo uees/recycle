@@ -273,6 +273,14 @@ export default {
       'loadCustomers'
     ]),
     async fetchData() {
+      // 因为没分页，所以不想一次查太多数据
+      if (this.queryParams.includecustomers && !this.date && !this.queryParams.customer_id) {
+        this.$message({
+          message: '请先选择月份',
+          type: 'error'
+        })
+        return false
+      }
       this.listLoading = true
       const { data } = await getRecycledStatistics(this.queryParams)
       this.tableData = data
