@@ -106,3 +106,14 @@ if (!function_exists('make_query_condition')) {
         }, $keys);
     }
 }
+
+if (!function_exists('next_month')) {
+    function next_month($month)
+    {
+        $nextMonth = ($month + 1) % 12;
+        if ($nextMonth == 0) {
+            $nextMonth = 12;
+        }
+        return $nextMonth;
+    }
+}

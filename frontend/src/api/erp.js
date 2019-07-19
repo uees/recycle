@@ -38,6 +38,14 @@ export function getRecycledStatistics(params) {
   return request.get('/recycled-statistics', { params })
 }
 
+export function getRecycledStatisticsRange(params) {
+  return request.get('/recycled-statistics/range', { params })
+}
+
 export function makeRecycledStatistics(data, config) {
   return request.post('/recycled-statistics', data, config)
+}
+
+export function makeAllCustomersRecycledStatistics(data, config) {
+  return request.post('/recycled-statistics/customers', data, config)
 }

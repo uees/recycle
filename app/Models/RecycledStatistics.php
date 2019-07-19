@@ -18,6 +18,7 @@ class RecycledStatistics extends Model
         'recycled_amount',
         'bad_amount',
         'good_amount',
+        'customer_id',
     ];
 
     /**

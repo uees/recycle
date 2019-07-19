@@ -106,7 +106,9 @@ $api->version('v1', ['namespace' => 'App\Api\V1'], function (Dingo\Api\Routing\R
 
             // 统计
             $api->get('recycled-statistics', 'RecycledStatisticsController@index');
+            $api->get('recycled-statistics/range', 'RecycledStatisticsController@range');
             $api->post('recycled-statistics', 'RecycledStatisticsController@create');
+            $api->post('recycled-statistics/customers', 'RecycledStatisticsController@createAll');
         });
     });
 });
