@@ -20,7 +20,7 @@
       >
         <div class="avatar-wrapper">
           <img
-            :src="user.avatar ? user.avatar : '/static/avatar.png'"
+            :src="user.avatar ? user.avatar : '/static/img/avatar.png'"
             class="user-avatar"
           >
           <i class="el-icon-caret-bottom" />

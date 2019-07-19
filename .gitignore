@@ -10,4 +10,5 @@ composer.lock
 package-lock.json
 
 public/index.html
+public/favicon.ico
 public/static/

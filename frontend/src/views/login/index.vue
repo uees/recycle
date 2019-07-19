@@ -1,5 +1,11 @@
 <template>
   <div class="login-container">
+    <div class="logo">
+      <img
+        src="/static/img/logo.png"
+        alt=""
+      >
+    </div>
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -201,11 +207,17 @@ $light_gray: #eee;
   background-color: $bg;
   overflow: hidden;
 
+  .logo {
+    max-width: 100%;
+    text-align: center;
+    margin-top: 120px;
+  }
+
   .login-form {
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 10px 35px 0;
     margin: 0 auto;
     overflow: hidden;
   }
