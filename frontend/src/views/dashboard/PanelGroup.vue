@@ -121,10 +121,21 @@ export default {
         recyclable_type = this.recyclableType
       }
 
+      const has_customer = this.totalStatistics.some(statistics => Boolean(statistics.customer_id))
+      const no_customer = this.totalStatistics.some(statistics => Boolean(!statistics.customer_id))
+
       for (const statistics of this.totalStatistics) {
-        if (statistics.recyclable_type === recyclable_type) {
-          for (const key of Object.keys(result)) {
-            result[key] += +statistics[key]
+        if (has_customer && no_customer) {
+          if (statistics.recyclable_type === recyclable_type && !statistics.customer_id) {
+            for (const key of Object.keys(result)) {
+              result[key] += +statistics[key]
+            }
+          }
+        } else {
+          if (statistics.recyclable_type === recyclable_type) {
+            for (const key of Object.keys(result)) {
+              result[key] += +statistics[key]
+            }
           }
         }
       }
