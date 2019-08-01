@@ -315,7 +315,7 @@
               @click="handleQC(scope)"
             >
               <span v-if="scope.row.qc_records && scope.row.qc_records.data">
-                {{ scope.row.qc_records.data | count_bad }}
+                {{ scope.row.qc_records.data | countBad }}
               </span>
               <span v-else>0</span>
             </el-link>
