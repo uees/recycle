@@ -51,6 +51,10 @@ class QcRecordController extends Controller
         $record = new QcRecord;
         $record->fill($request->only(['bad_amount']));
 
+        if ($created_at = $request->get('created_at')) {
+            $record->created_at = $created_at;
+        }
+
         $record->recycled_thing()->associate($recycled);
         $record->recyclable_type = $recycled->recyclable_type;
         
@@ -83,6 +87,10 @@ class QcRecordController extends Controller
         $this->authorize('update', $record);
 
         $record->fill($request->only(['bad_amount']));
+        
+        if ($created_at = $request->get('created_at')) {
+            $record->created_at = $created_at;
+        }
 
         $recycled = RecycledThing::whereId($request->get('recycled_thing_id'))->firstOrFail();
         $record->recycled_thing()->associate($recycled);

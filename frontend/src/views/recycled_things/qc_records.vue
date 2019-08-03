@@ -25,6 +25,33 @@
         style="width: 100%"
       >
         <el-table-column
+          label="回收日期"
+          width="160px"
+          align="center"
+        >
+          <template slot-scope="scope">
+            <el-tooltip
+              v-if="scope.row._is_edit"
+              class="item"
+              effect="dark"
+              content="留空表示当前日期"
+              placement="top-start"
+            >
+              <el-date-picker
+                v-model="scope.row.created_at"
+                clearable
+                type="date"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                placeholder="选择日期"
+                class="edit-input"
+                size="small"
+              />
+            </el-tooltip>
+            <span v-else>{{ scope.row.created_at }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           min-width="100px"
           label="不合格数量"
         >
